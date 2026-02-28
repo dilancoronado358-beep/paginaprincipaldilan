@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desarrollo Web Premium | Creación de Sitios Web de Élite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Variables de color y estilos base */
         :root {
@@ -501,41 +500,17 @@
             color: var(--text-gray);
         }
 
-        .contact-form {
+        /* Calendly Widget Container */
+        .calendly-container {
             background-color: var(--black-light);
-            padding: 2.5rem;
             border-radius: 10px;
+            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            background-color: var(--black-dark);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            color: var(--text-light);
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
+        .calendly-container .calendly-inline-widget {
+            border-radius: 10px;
         }
 
         /* Footer */
@@ -622,36 +597,6 @@
             font-size: 0.9rem;
         }
 
-        /* Mensajes de estado del formulario */
-        .form-message {
-            padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            text-align: center;
-            display: none;
-        }
-
-        .form-message.success {
-            background-color: rgba(46, 204, 113, 0.2);
-            border: 1px solid #2ecc71;
-            color: #2ecc71;
-            display: block;
-        }
-
-        .form-message.error {
-            background-color: rgba(231, 76, 60, 0.2);
-            border: 1px solid #e74c3c;
-            color: #e74c3c;
-            display: block;
-        }
-
-        .form-message.loading {
-            background-color: rgba(52, 152, 219, 0.2);
-            border: 1px solid #3498db;
-            color: #3498db;
-            display: block;
-        }
-
         /* Responsive */
         @media (max-width: 992px) {
             .hero h1 {
@@ -710,8 +655,7 @@
 
             .service-card,
             .portfolio-item,
-            .testimonial-slide,
-            .contact-form {
+            .testimonial-slide {
                 padding: 1.5rem;
             }
             
@@ -914,8 +858,7 @@
     <section class="contact" id="contacto">
         <div class="section-title">
             <h2>Iniciemos Tu Proyecto</h2>
-            <p>Transformemos tu visión en una realidad digital
-                excepcional</p>
+            <p>Agenda una consultoría gratuita y transformemos tu visión en una realidad digital excepcional</p>
         </div>
         <div class="contact-container">
             <div class="contact-info">
@@ -955,34 +898,23 @@
                         <p>Lun - Vie: 9:00 - 18:00</p>
                     </div>
                 </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h3>Agenda tu Reunión</h3>
+                        <p>Selecciona el horario que mejor se adapte a ti en el calendario y reserva tu consultoría gratuita de 30 minutos.</p>
+                    </div>
+                </div>
             </div>
-            <div class="contact-form">
-                <div id="formMessage" class="form-message"></div>
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="name">Nombre Completo</label>
-                        <input type="text" id="name" class="form-control"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" id="email" class="form-control"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="company">Empresa (Opcional)</label>
-                        <input type="text" id="company"
-                            class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="project">Descripción del
-                            Proyecto</label>
-                        <textarea id="project" class="form-control"
-                            required></textarea>
-                    </div>
-                    <button type="submit" class="cta-button"
-                        style="width: 100%;">Enviar Consulta</button>
-                </form>
+
+            <!-- Calendly Widget -->
+            <div class="calendly-container">
+                <!-- Principio del widget integrado de Calendly -->
+                <div class="calendly-inline-widget" data-url="https://calendly.com/dilancoronado358/30min?primary_color=ffffff" style="min-width:320px;height:700px;"></div>
+                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                <!-- Final del widget integrado de Calendly -->
             </div>
         </div>
     </section>
@@ -1042,85 +974,15 @@
     </a>
 
     <script>
-        // Configuración de Supabase con tus credenciales
-        const SUPABASE_URL = 'https://kchxqfxltxuckdqxegmh.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjaHhxZnhsdHh1Y2tkcXhlZ21oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDE4MzIsImV4cCI6MjA3Nzg3NzgzMn0.0Xa8rCjqfw0ZmsvSzhgJuA8gI0KII-L5vQJr-A6t6jA';
-        
-        // Inicializar Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
         // Smooth scrolling para enlaces internos
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Form submission
-        document.getElementById('contactForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
-            
-            // Obtener datos del formulario
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const company = document.getElementById('company').value || '';
-            const project = document.getElementById('project').value;
-            
-            const formMessage = document.getElementById('formMessage');
-            const submitButton = this.querySelector('button[type="submit"]');
-            
-            // Mostrar mensaje de carga
-            formMessage.textContent = 'Enviando consulta...';
-            formMessage.className = 'form-message loading';
-            formMessage.style.display = 'block';
-            
-            submitButton.disabled = true;
-            submitButton.textContent = 'Enviando...';
-            
-            try {
-                // Insertar datos en Supabase
-                const { data, error } = await supabase
-                    .from('contactos')
-                    .insert([
-                        { 
-                            nombre: name, 
-                            email: email, 
-                            empresa: company, 
-                            proyecto: project
-                        }
-                    ]);
-                
-                if (error) {
-                    throw error;
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
-                
-                // Mostrar mensaje de éxito
-                formMessage.textContent = '¡Gracias por tu consulta! Me pondré en contacto contigo pronto.';
-                formMessage.className = 'form-message success';
-                
-                // Resetear formulario
-                this.reset();
-                
-            } catch (error) {
-                console.error('Error al enviar el formulario:', error);
-                
-                // Mostrar mensaje de error
-                formMessage.textContent = 'Hubo un error al enviar tu consulta. Por favor, inténtalo de nuevo o contáctame directamente por teléfono o email.';
-                formMessage.className = 'form-message error';
-                
-            } finally {
-                // Restaurar botón
-                submitButton.disabled = false;
-                submitButton.textContent = 'Enviar Consulta';
-                
-                // Ocultar mensaje después de 5 segundos
-                setTimeout(() => {
-                    formMessage.style.display = 'none';
-                }, 5000);
-            }
+            });
         });
 
         // Navbar scroll effect
