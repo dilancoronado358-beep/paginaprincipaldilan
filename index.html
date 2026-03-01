@@ -1249,7 +1249,7 @@
 </footer>
 
 <!-- WhatsApp Flotante -->
-<a href="https://wa.me/qr/6FVSZOIED7H4E1" class="whatsapp-float" target="_blank" title="Escríbeme por WhatsApp">
+<a href="https://wa.me/593969930639?text=Hola%2C%20necesito%20m%C3%A1s%20informaci%C3%B3n" class="whatsapp-float" target="_blank" title="Escríbeme por WhatsApp">
     <i class="fab fa-whatsapp"></i>
 </a>
 
@@ -1673,10 +1673,80 @@
         doc.setTextColor(201, 168, 76);
         doc.text(folio, W - 12, H - 7, { align: 'right' });
 
-        doc.save(`Cotizacion-WebElite-${nombre.replace(/\s+/g, '-')}-${folio}.pdf`);
+        const filename = `Cotizacion-WebElite-${nombre.replace(/\s+/g, '-')}-${folio}.pdf`;
+
+        // Mobile-compatible download: use blob URL + hidden <a> click
+        try {
+            const blob = doc.output('blob');
+            const url = URL.createObjectURL(blob);
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            if (isIOS) {
+                // iOS Safari: open in new tab (no direct download support)
+                const newTab = window.open(url, '_blank');
+                if (!newTab) {
+                    // If popup blocked, use data URI fallback
+                    const dataUri = doc.output('datauristring');
+                    const a = document.createElement('a');
+                    a.href = dataUri;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+                setTimeout(() => URL.revokeObjectURL(url), 10000);
+            } else {
+                // Android + Desktop: standard blob download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+            }
+
+            // Button feedback
+            const btn = document.getElementById('btn-download');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡PDF generado!';
+            btn.style.background = '#2ecc71';
+            setTimeout(() => {
+                btn.innerHTML = original;
+                btn.style.background = '';
+            }, 3000);
+
+        } catch (err) {
+            console.error('PDF error:', err);
+            // Last resort fallback: data URI
+            const dataUri = doc.output('datauristring');
+            const a = document.createElement('a');
+            a.href = dataUri;
+            a.download = filename;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
     }
 
-</script>
+
 
 <!-- jsPDF Library -->
-<script src="https://cdnjs.cl
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', () => {
+            const item = q.parentElement;
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+</script>
+</body>
+</html>
