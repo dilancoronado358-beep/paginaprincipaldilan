@@ -665,6 +665,8 @@
             .cotizador-result-panel { position: static; }
         }
     </style>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -1732,12 +1734,6 @@
         }
     }
 
-
-
-<!-- jsPDF Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
     // FAQ Accordion
     document.querySelectorAll('.faq-question').forEach(q => {
         q.addEventListener('click', () => {
@@ -1747,6 +1743,9 @@
             if (!isOpen) item.classList.add('open');
         });
     });
+
 </script>
+
+
 </body>
 </html>
