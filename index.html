@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebElite | Desarrollo Web Premium para Marcas de Élite</title>
+    <title>Ignite | Desarrollo Web Premium para Marcas de Élite</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -91,10 +91,14 @@
             padding: 1.4rem 5%; max-width: 1400px; margin: 0 auto;
         }
         .logo {
-            font-family: var(--font-display); font-size: 2rem; font-weight: 700;
-            color: var(--white); text-decoration: none; letter-spacing: 0.02em;
+            display: inline-block;
+            text-decoration: none;
         }
-        .logo em { font-style: italic; color: var(--gold); }
+        .logo img {
+            height: 36px;
+            width: auto;
+            display: block;
+        }
         .nav-links { display: flex; gap: 2.5rem; }
         .nav-links a {
             color: var(--white-dim); text-decoration: none; font-size: 0.88rem;
@@ -489,7 +493,8 @@
             max-width: 1200px; margin: 0 auto 4rem; padding-bottom: 4rem;
             border-bottom: 1px solid rgba(201,168,76,0.1);
         }
-        .footer-brand .logo { display: block; margin-bottom: 1.2rem; font-size: 1.8rem; }
+        .footer-brand .logo { display: block; margin-bottom: 1.2rem; }
+        .footer-brand .logo img { height: 32px; }
         .footer-brand p { color: var(--white-dimmer); font-size: 0.88rem; line-height: 1.8; max-width: 260px; margin-bottom: 2rem; }
         .footer-socials { display: flex; gap: 0.8rem; }
         .footer-social {
@@ -681,7 +686,9 @@
 <!-- HEADER -->
 <header id="header">
     <nav class="navbar">
-        <a href="#inicio" class="logo">Web<em>Elite</em></a>
+        <a href="#inicio" class="logo">
+            <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite">
+        </a>
         <div class="nav-links" id="navLinks">
             <a href="#servicios">Servicios</a>
             <a href="#portafolio">Portafolio</a>
@@ -1160,7 +1167,7 @@
                     <div class="contact-icon-box"><i class="fas fa-envelope"></i></div>
                     <div>
                         <h4>Email</h4>
-                        <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fb9f92979a9598948994959a9f94c8cec3bb9c969a9297d5989496">[email&#160;protected]</a></p>
+                        <p>dilancoronado358@gmail.com</p>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -1195,7 +1202,7 @@
                 </div>
                 <!-- Calendly Widget -->
                 <div class="calendly-inline-widget" data-url="https://calendly.com/dilancoronado358/30min?primary_color=c9a84c&hide_gdpr_banner=1" style="min-width:320px;height:700px;"></div>
-                <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
             </div>
         </div>
     </div>
@@ -1205,7 +1212,9 @@
 <footer>
     <div class="footer-top">
         <div class="footer-brand">
-            <a href="#inicio" class="logo">Web<em>Elite</em></a>
+            <a href="#inicio" class="logo">
+                <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite">
+            </a>
             <p>Desarrollo web premium para marcas que quieren destacar y convertir visitas en clientes reales.</p>
             <div class="footer-socials">
                 <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
@@ -1237,7 +1246,7 @@
         <div class="footer-col">
             <h5>Contacto</h5>
             <ul>
-                <li><a href="/cdn-cgi/l/email-protection#a5c1ccc9c4cbc6cad7cacbc4c1ca96909de5c2c8c4ccc98bc6cac8"><span class="__cf_email__" data-cfemail="6c0805000d020f031e03020d08035f59542c0b010d0500420f0301">[email&#160;protected]</span></a></li>
+                <li><a href="mailto:dilancoronado358@gmail.com">dilancoronado358@gmail.com</a></li>
                 <li><a href="https://wa.me/593969930639">+593 96 993 0639</a></li>
                 <li><a href="#contacto">Agendar llamada</a></li>
                 <li><a href="#faq">Preguntas frecuentes</a></li>
@@ -1245,7 +1254,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <span>© 2025 WebElite · Todos los derechos reservados</span>
+        <span>© 2025 Ignite · Todos los derechos reservados</span>
         <span>Diseñado para convertir · Construido para durar</span>
     </div>
 </footer>
@@ -1255,7 +1264,7 @@
     <i class="fab fa-whatsapp"></i>
 </a>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
     // Cursor personalizado
     const cursor = document.querySelector('.cursor');
     const follower = document.querySelector('.cursor-follower');
@@ -1454,7 +1463,7 @@
         const email = document.getElementById('pdf-email').value.trim();
         const total = calcTotal();
         const fecha = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-        const folio = 'WE-' + Date.now().toString().slice(-6);
+        const folio = 'IG-' + Date.now().toString().slice(-6);
 
         // Build items array
         const items = [];
@@ -1487,13 +1496,11 @@
         doc.setLineWidth(0.3);
         doc.line(6, 52, W, 52);
 
-        // Logo
+        // Logo text (Ignite)
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(26);
         doc.setTextColor(247, 243, 238);
-        doc.text('Web', 16, 22);
-        doc.setTextColor(201, 168, 76);
-        doc.text('Elite', 35, 22);
+        doc.text('IGNITE', 16, 22);
 
         // Tagline
         doc.setFont('helvetica', 'normal');
@@ -1671,23 +1678,21 @@
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.setTextColor(107, 101, 96);
-        doc.text('WebElite · Desarrollo Web Premium · Todos los derechos reservados · ' + new Date().getFullYear(), W / 2, H - 7, { align: 'center' });
+        doc.text('Ignite · Desarrollo Web Premium · Todos los derechos reservados · ' + new Date().getFullYear(), W / 2, H - 7, { align: 'center' });
         doc.setTextColor(201, 168, 76);
         doc.text(folio, W - 12, H - 7, { align: 'right' });
 
-        const filename = `Cotizacion-WebElite-${nombre.replace(/\s+/g, '-')}-${folio}.pdf`;
+        const filename = `Cotizacion-Ignite-${nombre.replace(/\s+/g, '-')}-${folio}.pdf`;
 
-        // Mobile-compatible download: use blob URL + hidden <a> click
+        // Mobile-compatible download
         try {
             const blob = doc.output('blob');
             const url = URL.createObjectURL(blob);
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
             if (isIOS) {
-                // iOS Safari: open in new tab (no direct download support)
                 const newTab = window.open(url, '_blank');
                 if (!newTab) {
-                    // If popup blocked, use data URI fallback
                     const dataUri = doc.output('datauristring');
                     const a = document.createElement('a');
                     a.href = dataUri;
@@ -1699,7 +1704,6 @@
                 }
                 setTimeout(() => URL.revokeObjectURL(url), 10000);
             } else {
-                // Android + Desktop: standard blob download
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
@@ -1722,7 +1726,6 @@
 
         } catch (err) {
             console.error('PDF error:', err);
-            // Last resort fallback: data URI
             const dataUri = doc.output('datauristring');
             const a = document.createElement('a');
             a.href = dataUri;
@@ -1745,7 +1748,6 @@
     });
 
 </script>
-
 
 </body>
 </html>
