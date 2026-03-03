@@ -1,1753 +1,1315 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ignite | Desarrollo Web Premium para Marcas de Élite</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --black: #080808;
-            --black-2: #111111;
-            --black-3: #1a1a1a;
-            --black-4: #222222;
-            --gold: #c9a84c;
-            --gold-light: #e8c97a;
-            --gold-dark: #9a7a30;
-            --white: #f7f3ee;
-            --white-dim: #b8b0a4;
-            --white-dimmer: #6b6560;
-            --font-display: 'Cormorant Garamond', serif;
-            --font-body: 'DM Sans', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ignite | Agencia Digital Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root {
+  --black: #0a0a0a;
+  --black-2: #111;
+  --black-3: #181818;
+  --black-4: #222;
+  --white: #f5f2ed;
+  --white-2: #ddd9d2;
+  --white-3: #aaa49c;
+  --white-4: #666;
+  --accent: #f5f2ed;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-body: 'Outfit', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+/* CURSOR */
+.cur { width: 8px; height: 8px; background: var(--white); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .15s, height .15s, mix-blend-mode .15s; mix-blend-mode: difference; }
+.cur-ring { width: 40px; height: 40px; border: 1px solid rgba(245,242,237,.35); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: all .1s ease; }
+body:has(a:hover) .cur, body:has(button:hover) .cur { width: 20px; height: 20px; }
 
-        body {
-            background: var(--black);
-            color: var(--white);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-            cursor: none;
-        }
+/* POPUP */
+.popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 99990; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); opacity: 0; transition: opacity .4s; pointer-events: none; }
+.popup-overlay.show { opacity: 1; pointer-events: all; }
+.popup-box {
+  background: var(--white);
+  color: var(--black);
+  width: min(520px, 90vw);
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  transform: translateY(30px) scale(.97);
+  transition: transform .4s cubic-bezier(.22,.68,0,1.2);
+}
+.popup-overlay.show .popup-box { transform: translateY(0) scale(1); }
+.popup-top { background: var(--black); padding: 2.2rem 2.5rem 2rem; }
+.popup-badge { display: inline-block; background: var(--white); color: var(--black); font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; padding: 4px 12px; margin-bottom: 1rem; }
+.popup-title { font-family: var(--font-display); font-size: clamp(2.2rem, 7vw, 3.4rem); color: var(--white); line-height: .95; letter-spacing: .02em; }
+.popup-title span { color: var(--white-3); }
+.popup-body { padding: 2rem 2.5rem; }
+.popup-body p { font-size: .95rem; color: var(--black-3); line-height: 1.7; margin-bottom: 1.2rem; }
+.popup-spots { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.8rem; }
+.spot-dot { width: 10px; height: 10px; border-radius: 50%; background: #111; }
+.spot-dot.taken { background: var(--white-4); }
+.popup-spots-text { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.popup-cta { display: flex; gap: .8rem; flex-wrap: wrap; }
+.popup-cta a { flex: 1; min-width: 120px; text-align: center; text-decoration: none; padding: .85rem 1.4rem; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; transition: all .25s; font-family: var(--font-body); }
+.popup-cta .cta-primary { background: var(--black); color: var(--white); }
+.popup-cta .cta-primary:hover { background: #222; }
+.popup-cta .cta-secondary { background: transparent; color: var(--black); border: 1.5px solid var(--black); }
+.popup-cta .cta-secondary:hover { background: #f0ede8; }
+.popup-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: rgba(255,255,255,.1); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: .9rem; transition: background .2s; }
+.popup-close:hover { background: rgba(255,255,255,.25); }
+.popup-stripe { height: 5px; background: linear-gradient(90deg, #111 0%, #555 50%, #111 100%); }
 
-        /* ── CURSOR PERSONALIZADO ── */
-        .cursor {
-            width: 10px; height: 10px;
-            background: var(--gold);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background 0.2s;
-        }
-        .cursor-follower {
-            width: 36px; height: 36px;
-            border: 1px solid rgba(201,168,76,0.5);
-            border-radius: 50%;
-            position: fixed; top: 0; left: 0;
-            pointer-events: none; z-index: 99998;
-            transform: translate(-50%, -50%);
-            transition: all 0.08s ease;
-        }
-        body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 18px; height: 18px; }
+/* HEADER */
+header { position: fixed; width: 100%; z-index: 1000; top: 0; transition: background .3s, border-color .3s; }
+header.scrolled { background: rgba(10,10,10,.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.07); }
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 5%; max-width: 1440px; margin: 0 auto; }
+.logo img { height: 40px; width: auto; display: block; }
+.nav-links { display: flex; gap: 2.2rem; }
+.nav-links a { color: var(--white-3); text-decoration: none; font-size: .82rem; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; transition: color .3s; }
+.nav-links a:hover { color: var(--white); }
+.btn-nav { background: var(--white); color: var(--black); padding: .6rem 1.5rem; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .25s; border: none; cursor: pointer; font-family: var(--font-body); }
+.btn-nav:hover { background: var(--white-2); }
+.mobile-menu { display: none; font-size: 1.4rem; cursor: pointer; color: var(--white); background: none; border: none; }
 
-        /* ── BARRA DE URGENCIA ── */
-        .urgency-bar {
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
-            background-size: 200% 100%;
-            animation: shimmer 3s infinite;
-            color: var(--black);
-            text-align: center;
-            padding: 10px 20px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            position: relative; z-index: 1001;
-        }
-        .urgency-bar span { margin: 0 8px; }
-        @keyframes shimmer { 0%,100%{background-position:0%} 50%{background-position:100%} }
+/* HERO */
+.hero { min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding-bottom: 6rem; }
+.hero-bg { position: absolute; inset: 0; background: var(--black); }
+.hero-noise { position: absolute; inset: 0; opacity: .035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size: 200px; }
+.hero-lines { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255,255,255,.025) 80px), repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255,255,255,.025) 80px); }
+.hero-content { position: relative; z-index: 2; padding: 0 5%; max-width: 1440px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr .45fr; gap: 4rem; align-items: flex-end; }
+.hero-left { padding-top: 140px; }
+.hero-pre { display: flex; align-items: center; gap: 12px; margin-bottom: 1.8rem; opacity: 0; animation: fadeUp .6s .3s forwards; }
+.hero-pre-line { width: 40px; height: 1px; background: var(--white-3); }
+.hero-pre-text { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--white-3); }
+.hero-h1 { font-family: var(--font-display); font-size: clamp(5.5rem, 12vw, 11rem); line-height: .88; letter-spacing: .01em; margin-bottom: 2rem; opacity: 0; animation: fadeUp .7s .5s forwards; }
+.hero-h1 .italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.hero-h1 .stroke { -webkit-text-stroke: 1.5px var(--white); color: transparent; }
+.hero-desc { font-size: 1rem; color: var(--white-3); max-width: 460px; line-height: 1.8; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp .7s .7s forwards; }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp .7s .9s forwards; }
+.btn-white { background: var(--white); color: var(--black); padding: .9rem 2.2rem; font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; display: inline-block; font-family: var(--font-body); border: none; cursor: pointer; }
+.btn-white:hover { background: var(--white-2); transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,.3); padding: .9rem 2.2rem; font-size: .82rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; display: inline-block; font-family: var(--font-body); }
+.btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,.05); }
+.hero-right { padding-top: 140px; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; }
+.hero-stat { border: 1px solid rgba(255,255,255,.1); padding: 1.8rem; background: rgba(255,255,255,.02); opacity: 0; animation: fadeUp .6s both; }
+.hero-stat:nth-child(1) { animation-delay: .8s; }
+.hero-stat:nth-child(2) { animation-delay: .95s; }
+.hero-stat:nth-child(3) { animation-delay: 1.1s; }
+.hero-stat-num { font-family: var(--font-display); font-size: 3.2rem; color: var(--white); line-height: 1; display: block; }
+.hero-stat-label { font-size: .72rem; color: var(--white-4); letter-spacing: .1em; text-transform: uppercase; margin-top: .3rem; display: block; }
+.hero-scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeIn 1s 1.5s forwards; }
+.hero-scroll-hint span { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--white-4); }
+.scroll-anim { width: 24px; height: 38px; border: 1px solid rgba(255,255,255,.2); border-radius: 12px; position: relative; }
+.scroll-anim::after { content: ''; width: 4px; height: 8px; background: var(--white); border-radius: 2px; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: scrollDot 2s infinite; }
+@keyframes scrollDot { 0%,100%{opacity:1;top:6px} 50%{opacity:0;top:20px} }
 
-        /* ── HEADER ── */
-        header {
-            position: fixed; width: 100%; z-index: 1000;
-            top: 36px;
-            transition: top 0.3s, background 0.3s, backdrop-filter 0.3s;
-        }
-        header.scrolled {
-            top: 0;
-            background: rgba(8,8,8,0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(201,168,76,0.12);
-        }
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.4rem 5%; max-width: 1400px; margin: 0 auto;
-        }
-        .logo {
-            display: inline-block;
-            text-decoration: none;
-        }
-        .logo img {
-            height: 36px;
-            width: auto;
-            display: block;
-        }
-        .nav-links { display: flex; gap: 2.5rem; }
-        .nav-links a {
-            color: var(--white-dim); text-decoration: none; font-size: 0.88rem;
-            font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
-            transition: color 0.3s; position: relative;
-        }
-        .nav-links a:hover { color: var(--gold); }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: -4px; left: 0;
-            width: 0; height: 1px; background: var(--gold); transition: width 0.3s;
-        }
-        .nav-links a:hover::after { width: 100%; }
-        .btn-gold {
-            background: transparent; border: 1px solid var(--gold);
-            color: var(--gold); padding: 0.65rem 1.6rem;
-            font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
-            letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
-            cursor: pointer; transition: all 0.3s; display: inline-block;
-        }
-        .btn-gold:hover { background: var(--gold); color: var(--black); }
-        .btn-gold-fill {
-            background: var(--gold); border: 1px solid var(--gold);
-            color: var(--black); padding: 0.9rem 2.2rem;
-            font-family: var(--font-body); font-size: 0.85rem; font-weight: 700;
-            letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
-            cursor: pointer; transition: all 0.3s; display: inline-block;
-        }
-        .btn-gold-fill:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,76,0.3); }
-        .mobile-menu { display: none; font-size: 1.4rem; cursor: pointer; color: var(--white); }
+/* MARQUEE */
+.marquee-wrap { border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); padding: 1.1rem 0; overflow: hidden; background: var(--black-2); }
+.marquee-track { display: flex; gap: 0; animation: marquee 22s linear infinite; white-space: nowrap; }
+.marquee-item { font-family: var(--font-display); font-size: 1.1rem; letter-spacing: .12em; text-transform: uppercase; color: var(--white-4); padding: 0 2.5rem; display: flex; align-items: center; gap: 2.5rem; flex-shrink: 0; }
+.marquee-item::after { content: '◆'; color: var(--white-3); font-size: .5rem; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-        /* ── HERO ── */
-        .hero {
-            min-height: 100vh;
-            display: flex; align-items: center;
-            padding: 0 5%; padding-top: 120px;
-            position: relative; overflow: hidden;
-            background: var(--black);
-        }
-        .hero-bg {
-            position: absolute; inset: 0; z-index: 0;
-            background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
-                        radial-gradient(ellipse 50% 80% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
-        }
-        .hero-grid {
-            position: absolute; inset: 0; z-index: 0;
-            background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-        }
-        .hero-content { max-width: 750px; position: relative; z-index: 1; }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            border: 1px solid rgba(201,168,76,0.4); padding: 6px 16px;
-            margin-bottom: 2rem; font-size: 0.75rem; letter-spacing: 0.14em;
-            text-transform: uppercase; color: var(--gold);
-            animation: fadeUp 0.8s 0.2s both;
-        }
-        .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: blink 2s infinite; }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-        .hero h1 {
-            font-family: var(--font-display); font-size: clamp(3rem, 7vw, 5.5rem);
-            font-weight: 300; line-height: 1.05; letter-spacing: -0.01em;
-            margin-bottom: 1.8rem;
-            animation: fadeUp 0.8s 0.4s both;
-        }
-        .hero h1 em { font-style: italic; color: var(--gold); }
-        .hero h1 strong { font-weight: 700; }
-        .hero-sub {
-            font-size: 1.1rem; color: var(--white-dim); max-width: 520px;
-            margin-bottom: 2.5rem; line-height: 1.8;
-            animation: fadeUp 0.8s 0.6s both;
-        }
-        .hero-buttons {
-            display: flex; gap: 1rem; flex-wrap: wrap;
-            animation: fadeUp 0.8s 0.8s both;
-        }
-        .hero-scroll {
-            position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            color: var(--white-dimmer); font-size: 0.75rem; letter-spacing: 0.12em;
-            text-transform: uppercase; animation: fadeIn 1s 1.5s both;
-        }
-        .hero-scroll-line {
-            width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent);
-            animation: scrollLine 2s infinite;
-        }
-        @keyframes scrollLine { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform:scaleY(1);transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+/* SERVICIOS */
+.services { padding: 9rem 5%; background: var(--black); }
+.services-inner { max-width: 1440px; margin: 0 auto; }
+.sec-eyebrow { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--white-4); margin-bottom: .8rem; display: block; }
+.sec-title { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5.5rem); line-height: .9; letter-spacing: .01em; margin-bottom: 1.2rem; }
+.sec-title .italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.sec-title .stroke { -webkit-text-stroke: 1.5px var(--white); color: transparent; }
+.sec-sub { color: var(--white-3); font-size: .98rem; max-width: 420px; line-height: 1.8; }
+.sec-header { margin-bottom: 5rem; }
+.sec-header-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 3rem; flex-wrap: wrap; }
 
-        /* ── STATS ── */
-        .stats {
-            background: var(--black-2);
-            border-top: 1px solid rgba(201,168,76,0.12);
-            border-bottom: 1px solid rgba(201,168,76,0.12);
-            padding: 3rem 5%;
-        }
-        .stats-inner {
-            max-width: 1100px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-        .stat-item { text-align: center; }
-        .stat-num {
-            font-family: var(--font-display); font-size: 3.5rem; font-weight: 700;
-            color: var(--gold); line-height: 1; display: block;
-        }
-        .stat-label {
-            font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--white-dimmer); margin-top: 0.4rem;
-        }
+.services-list { display: grid; grid-template-columns: 1fr; gap: 1px; }
+.svc { display: grid; grid-template-columns: 80px 1fr auto; gap: 2.5rem; align-items: start; padding: 2.5rem 0; border-bottom: 1px solid rgba(255,255,255,.07); position: relative; transition: background .3s; cursor: default; }
+.svc:first-child { border-top: 1px solid rgba(255,255,255,.07); }
+.svc::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 0; background: var(--white); transition: height .4s; }
+.svc:hover::before { height: 100%; }
+.svc:hover { background: rgba(255,255,255,.02); }
+.svc-num { font-family: var(--font-display); font-size: 1.3rem; color: var(--white-4); padding-top: .3rem; }
+.svc-body h3 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700; margin-bottom: .7rem; transition: color .3s; }
+.svc:hover .svc-body h3 { color: var(--white); }
+.svc-body p { color: var(--white-3); font-size: .9rem; line-height: 1.8; max-width: 500px; }
+.svc-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+.svc-tag { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; border: 1px solid rgba(255,255,255,.15); padding: 3px 10px; color: var(--white-4); }
+.svc-arrow { font-size: 1.4rem; color: var(--white-4); opacity: 0; transform: translateX(-8px); transition: all .3s; margin-top: .5rem; }
+.svc:hover .svc-arrow { opacity: 1; transform: translateX(0); color: var(--white); }
 
-        /* ── SECCIÓN TITLE ── */
-        .section-label {
-            display: inline-block; font-size: 0.72rem; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
-        }
-        .section-title {
-            font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.4rem);
-            font-weight: 300; line-height: 1.15; margin-bottom: 1rem;
-        }
-        .section-title em { font-style: italic; color: var(--gold); }
-        .section-sub { color: var(--white-dim); font-size: 1rem; max-width: 500px; line-height: 1.8; }
-        .section-header { margin-bottom: 4rem; }
-        .divider {
-            width: 60px; height: 1px; background: var(--gold);
-            margin: 1.5rem 0;
-        }
+/* POR QUÉ */
+.why { padding: 9rem 5%; background: var(--black-2); }
+.why-inner { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center; }
+.why-visual { position: relative; }
+.why-big-text { font-family: var(--font-display); font-size: clamp(7rem, 18vw, 16rem); color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.08); line-height: .85; user-select: none; }
+.why-card-float {
+  position: absolute; bottom: 2rem; right: -2rem;
+  background: var(--white); color: var(--black);
+  padding: 2rem 2.5rem; width: 280px;
+}
+.why-card-float .n { font-family: var(--font-display); font-size: 3.5rem; line-height: 1; }
+.why-card-float .l { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-4); margin-top: .3rem; }
+.why-perks { display: flex; flex-direction: column; gap: 2.2rem; }
+.perk { display: flex; gap: 1.5rem; }
+.perk-icon { width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: .95rem; flex-shrink: 0; transition: background .3s; }
+.perk:hover .perk-icon { background: var(--white); color: var(--black); }
+.perk h4 { font-size: 1rem; font-weight: 600; margin-bottom: .4rem; }
+.perk p { color: var(--white-3); font-size: .88rem; line-height: 1.7; }
 
-        /* ── SERVICIOS ── */
-        .services { padding: 8rem 5%; background: var(--black); }
-        .services-inner { max-width: 1200px; margin: 0 auto; }
-        .services-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-            border: 1px solid rgba(201,168,76,0.15);
-            margin-top: 1rem;
-        }
-        .service-card {
-            padding: 3rem 2.5rem; background: var(--black-2);
-            transition: background 0.4s; position: relative; overflow: hidden;
-        }
-        .service-card::before {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 2px; background: var(--gold);
-            transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
-        }
-        .service-card:hover { background: var(--black-3); }
-        .service-card:hover::before { transform: scaleX(1); }
-        .service-num {
-            font-family: var(--font-display); font-size: 4rem; font-weight: 700;
-            color: rgba(201,168,76,0.12); line-height: 1; margin-bottom: 1.5rem;
-            transition: color 0.4s;
-        }
-        .service-card:hover .service-num { color: rgba(201,168,76,0.25); }
-        .service-icon-wrap {
-            width: 52px; height: 52px; border: 1px solid rgba(201,168,76,0.3);
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.5rem; color: var(--gold); font-size: 1.3rem;
-            transition: background 0.3s;
-        }
-        .service-card:hover .service-icon-wrap { background: rgba(201,168,76,0.1); }
-        .service-card h3 {
-            font-family: var(--font-display); font-size: 1.6rem; font-weight: 600;
-            margin-bottom: 1rem; line-height: 1.2;
-        }
-        .service-card p { color: var(--white-dim); font-size: 0.93rem; line-height: 1.8; margin-bottom: 1.5rem; }
-        .service-link {
-            font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
-            color: var(--gold); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-            transition: gap 0.3s;
-        }
-        .service-link:hover { gap: 14px; }
+/* PORTAFOLIO */
+.portfolio { padding: 9rem 5%; background: var(--black); }
+.portfolio-inner { max-width: 1440px; margin: 0 auto; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem; }
+.port-item { position: relative; overflow: hidden; background: var(--black-3); }
+.port-item-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; filter: grayscale(80%) contrast(1.1); transition: filter .6s, transform .7s cubic-bezier(.25,.46,.45,.94); }
+.port-item:hover .port-item-img { filter: grayscale(0%) contrast(1); transform: scale(1.06); }
+.port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,.95) 0%, rgba(10,10,10,.2) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; }
+.port-tag { font-size: .65rem; letter-spacing: .16em; text-transform: uppercase; color: var(--white-3); margin-bottom: .5rem; }
+.port-title { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 700; margin-bottom: .5rem; transform: translateY(8px); transition: transform .4s; }
+.port-item:hover .port-title { transform: translateY(0); }
+.port-desc { font-size: .82rem; color: var(--white-3); line-height: 1.6; opacity: 0; transform: translateY(10px); transition: all .4s .05s; }
+.port-item:hover .port-desc { opacity: 1; transform: translateY(0); }
 
-        /* ── POR QUÉ YO ── */
-        .why { padding: 8rem 5%; background: var(--black-2); }
-        .why-inner {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
-        }
-        .why-visual {
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .why-box {
-            width: 100%; aspect-ratio: 1;
-            border: 1px solid rgba(201,168,76,0.2);
-            position: relative; overflow: hidden;
-            background: var(--black-3);
-        }
-        .why-box-inner {
-            position: absolute; inset: 20px;
-            border: 1px solid rgba(201,168,76,0.1);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 1rem;
-        }
-        .why-big-num {
-            font-family: var(--font-display); font-size: 8rem; font-weight: 700;
-            color: var(--gold); line-height: 1;
-        }
-        .why-big-label {
-            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--white-dim); text-align: center;
-        }
-        .why-corner {
-            position: absolute; width: 40px; height: 40px;
-        }
-        .why-corner.tl { top: -1px; left: -1px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
-        .why-corner.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
-        .why-list { display: flex; flex-direction: column; gap: 2rem; }
-        .why-item { display: flex; gap: 1.5rem; align-items: flex-start; }
-        .why-check {
-            width: 40px; height: 40px; border: 1px solid rgba(201,168,76,0.4);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--gold); font-size: 0.9rem; flex-shrink: 0;
-        }
-        .why-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
-        .why-item p { color: var(--white-dim); font-size: 0.9rem; line-height: 1.7; }
+/* PROCESO */
+.process { padding: 9rem 5%; background: var(--black-3); }
+.process-inner { max-width: 1440px; margin: 0 auto; }
+.process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 1rem; }
+.step { padding: 2.5rem 2rem; border-right: 1px solid rgba(255,255,255,.06); position: relative; }
+.step:last-child { border-right: none; }
+.step::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: var(--white); transition: width .5s; }
+.step:hover::after { width: 100%; }
+.step-n { font-family: var(--font-display); font-size: 5rem; color: rgba(255,255,255,.05); line-height: 1; display: block; margin-bottom: 1.5rem; transition: color .4s; }
+.step:hover .step-n { color: rgba(255,255,255,.12); }
+.step-icon { color: var(--white-3); font-size: 1.3rem; margin-bottom: 1rem; }
+.step h3 { font-size: .95rem; font-weight: 600; margin-bottom: .8rem; letter-spacing: .02em; }
+.step p { color: var(--white-4); font-size: .85rem; line-height: 1.75; }
 
-        /* ── PORTAFOLIO ── */
-        .portfolio { padding: 8rem 5%; background: var(--black); }
-        .portfolio-inner { max-width: 1200px; margin: 0 auto; }
-        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .portfolio-item {
-            position: relative; overflow: hidden; aspect-ratio: 4/3;
-            cursor: pointer;
-        }
-        .portfolio-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
-        .portfolio-item:hover .portfolio-img { transform: scale(1.08); }
-        .portfolio-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(8,8,8,0.92) 0%, transparent 60%);
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 2rem; transform: translateY(60px); transition: transform 0.4s;
-        }
-        .portfolio-item:hover .portfolio-overlay { transform: translateY(0); }
-        .portfolio-tag {
-            font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 0.5rem;
-        }
-        .portfolio-overlay h3 { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 0.8rem; }
-        .portfolio-overlay p { color: var(--white-dim); font-size: 0.85rem; line-height: 1.7; }
+/* PRECIOS */
+.pricing { padding: 9rem 5%; background: var(--black); }
+.pricing-inner { max-width: 1200px; margin: 0 auto; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.price-card { border: 1px solid rgba(255,255,255,.1); padding: 3rem 2.5rem; background: var(--black-2); position: relative; transition: border-color .3s, transform .3s; }
+.price-card:hover { border-color: rgba(255,255,255,.3); transform: translateY(-4px); }
+.price-card.featured { border-color: var(--white); background: var(--white); color: var(--black); }
+.price-card.featured:hover { transform: translateY(-4px); }
+.price-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--black); color: var(--white); font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; padding: 4px 16px; border: 1px solid rgba(255,255,255,.2); }
+.featured .price-badge { background: var(--white); color: var(--black); border-color: transparent; }
+.price-plan { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--white-4); margin-bottom: 1.2rem; }
+.featured .price-plan { color: var(--black-4); }
+.price-num { font-family: var(--font-display); font-size: 4rem; line-height: 1; color: var(--white); margin-bottom: .3rem; }
+.featured .price-num { color: var(--black); }
+.price-num sup { font-size: 1.5rem; vertical-align: top; margin-top: .6rem; display: inline-block; }
+.price-period { color: var(--white-4); font-size: .83rem; margin-bottom: 2rem; }
+.featured .price-period { color: var(--white-4); }
+.price-divider { height: 1px; background: rgba(255,255,255,.1); margin-bottom: 2rem; }
+.featured .price-divider { background: rgba(0,0,0,.12); }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: .9rem; margin-bottom: 2.5rem; }
+.price-features li { display: flex; align-items: center; gap: 10px; font-size: .88rem; color: var(--white-3); }
+.featured .price-features li { color: var(--black-3); }
+.price-features li i { font-size: .75rem; flex-shrink: 0; }
+.price-features li.ok i { color: var(--white); }
+.featured .price-features li.ok i { color: var(--black); }
+.price-features li.no { opacity: .4; }
+.btn-price-w { display: block; text-align: center; background: var(--white); color: var(--black); padding: .9rem; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; font-family: var(--font-body); }
+.btn-price-w:hover { background: var(--white-2); }
+.btn-price-b { display: block; text-align: center; background: var(--black); color: var(--white); border: 1.5px solid var(--black); padding: .9rem; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; font-family: var(--font-body); }
+.btn-price-b:hover { background: var(--black-4); }
 
-        /* ── PROCESO ── */
-        .process { padding: 8rem 5%; background: var(--black-2); }
-        .process-inner { max-width: 1100px; margin: 0 auto; }
-        .process-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 0; margin-top: 1rem;
-            border: 1px solid rgba(201,168,76,0.15);
-        }
-        .step {
-            padding: 2.5rem 2rem; position: relative;
-            border-right: 1px solid rgba(201,168,76,0.15);
-            transition: background 0.3s;
-        }
-        .step:last-child { border-right: none; }
-        .step:hover { background: rgba(201,168,76,0.03); }
-        .step-num {
-            font-family: var(--font-display); font-size: 5rem; font-weight: 700;
-            color: rgba(201,168,76,0.08); line-height: 1; display: block;
-            margin-bottom: 1.2rem; transition: color 0.3s;
-        }
-        .step:hover .step-num { color: rgba(201,168,76,0.18); }
-        .step-icon { color: var(--gold); font-size: 1.4rem; margin-bottom: 1rem; }
-        .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.8rem; letter-spacing: 0.02em; }
-        .step p { color: var(--white-dim); font-size: 0.87rem; line-height: 1.7; }
+/* COTIZADOR */
+.cotizador { padding: 9rem 5%; background: var(--black-2); }
+.cotizador-inner { max-width: 1200px; margin: 0 auto; }
+.cot-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 3rem; align-items: start; }
+.cot-panel { background: var(--black-3); border: 1px solid rgba(255,255,255,.08); padding: 2.5rem; }
+.cot-result { background: var(--white); color: var(--black); padding: 2.5rem; position: sticky; top: 100px; }
+.cot-section-ttl { font-family: var(--font-display); font-size: 1rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-3); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: 8px; }
+.cot-block { margin-bottom: 2rem; }
+.cot-label { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--white-4); margin-bottom: .7rem; display: block; }
+.cot-opts { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cot-opt { border: 1px solid rgba(255,255,255,.12); padding: .5rem 1rem; font-size: .82rem; color: var(--white-3); cursor: pointer; transition: all .22s; background: transparent; font-family: var(--font-body); }
+.cot-opt:hover { border-color: rgba(255,255,255,.4); color: var(--white); }
+.cot-opt.sel { background: var(--white); border-color: var(--white); color: var(--black); font-weight: 600; }
+.cot-opt.multi.sel { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); color: var(--white); }
+.cot-input { width: 100%; background: var(--black-4); border: 1px solid rgba(255,255,255,.1); color: var(--white); padding: .7rem 1rem; font-family: var(--font-body); font-size: .9rem; transition: border-color .3s; outline: none; }
+.cot-input:focus { border-color: rgba(255,255,255,.4); }
+.cot-range-wrap { display: flex; align-items: center; gap: 1rem; }
+.cot-range { flex: 1; -webkit-appearance: none; height: 2px; background: rgba(255,255,255,.15); outline: none; }
+.cot-range::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--white); border-radius: 50%; cursor: pointer; }
+.cot-range-val { font-family: var(--font-display); font-size: 1.5rem; color: var(--white); min-width: 28px; text-align: right; }
+/* result panel */
+.res-label { font-size: .65rem; letter-spacing: .16em; text-transform: uppercase; color: var(--white-4); }
+.res-total { font-family: var(--font-display); font-size: 3.5rem; color: var(--black); line-height: 1; margin: .3rem 0 .2rem; }
+.res-note { font-size: .75rem; color: var(--white-4); margin-bottom: 1.5rem; }
+.res-divider { height: 1px; background: rgba(0,0,0,.12); margin: 1.2rem 0; }
+.res-line { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .7rem; }
+.res-line-label { font-size: .83rem; color: var(--black-3); flex: 1; }
+.res-line-val { font-size: .83rem; font-weight: 600; white-space: nowrap; color: var(--black); }
+.res-empty { text-align: center; padding: 1.5rem 0; color: var(--white-4); font-size: .85rem; font-style: italic; }
+.client-fields { display: flex; flex-direction: column; gap: .7rem; margin-bottom: 1.5rem; }
+.cfield { display: flex; flex-direction: column; gap: .25rem; }
+.cfield label { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--white-4); }
+.cot-input-b { width: 100%; background: #f0ede8; border: 1px solid rgba(0,0,0,.12); color: var(--black); padding: .65rem .9rem; font-family: var(--font-body); font-size: .88rem; outline: none; transition: border-color .3s; }
+.cot-input-b:focus { border-color: rgba(0,0,0,.4); }
+.btn-dl { width: 100%; background: var(--black); color: var(--white); border: none; padding: 1rem; font-family: var(--font-body); font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; transition: all .3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-dl:hover { background: var(--black-4); }
+.btn-dl:disabled { background: #ccc; color: #888; cursor: not-allowed; }
 
-        /* ── PRECIOS ── */
-        .pricing { padding: 8rem 5%; background: var(--black); }
-        .pricing-inner { max-width: 1100px; margin: 0 auto; }
-        .pricing-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem;
-        }
-        .price-card {
-            border: 1px solid rgba(201,168,76,0.15); padding: 3rem 2.5rem;
-            background: var(--black-2); position: relative; transition: border-color 0.3s;
-        }
-        .price-card.featured {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, var(--black-3) 0%, rgba(201,168,76,0.05) 100%);
-        }
-        .price-card:hover { border-color: rgba(201,168,76,0.5); }
-        .price-badge {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: var(--black);
-            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-            font-weight: 700; padding: 4px 16px;
-        }
-        .price-plan {
-            font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 1.2rem;
-        }
-        .price-num {
-            font-family: var(--font-display); font-size: 3.5rem; font-weight: 700;
-            line-height: 1; color: var(--white); margin-bottom: 0.3rem;
-        }
-        .price-num sup { font-size: 1.5rem; vertical-align: top; margin-top: 0.6rem; display: inline-block; }
-        .price-period { color: var(--white-dimmer); font-size: 0.85rem; margin-bottom: 2rem; }
-        .price-divider { height: 1px; background: rgba(201,168,76,0.15); margin-bottom: 2rem; }
-        .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 2.5rem; }
-        .price-features li {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 0.9rem; color: var(--white-dim);
-        }
-        .price-features li i { color: var(--gold); font-size: 0.75rem; flex-shrink: 0; }
-        .price-features li.disabled { color: var(--white-dimmer); }
-        .price-features li.disabled i { color: var(--white-dimmer); }
-        .price-desc { color: var(--white-dim); font-size: 0.87rem; line-height: 1.7; margin-bottom: 2rem; }
+/* TESTIMONIOS */
+.testimonials { padding: 9rem 5%; background: var(--black); }
+.testimonials-inner { max-width: 1440px; margin: 0 auto; }
+.test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.test-card { border: 1px solid rgba(255,255,255,.07); padding: 2.5rem; background: var(--black-2); transition: border-color .3s; }
+.test-card:hover { border-color: rgba(255,255,255,.2); }
+.test-stars { color: var(--white); font-size: .8rem; letter-spacing: 4px; margin-bottom: 1.5rem; }
+.test-text { font-family: var(--font-serif); font-style: italic; font-size: 1.1rem; line-height: 1.75; color: var(--white); margin-bottom: 2rem; }
+.test-author { display: flex; align-items: center; gap: 1rem; }
+.test-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,.15); filter: grayscale(60%); }
+.test-name { font-weight: 600; font-size: .88rem; }
+.test-role { color: var(--white-4); font-size: .75rem; margin-top: 2px; }
 
-        /* ── TESTIMONIOS ── */
-        .testimonials { padding: 8rem 5%; background: var(--black-2); }
-        .testimonials-inner { max-width: 1200px; margin: 0 auto; }
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .testimonial-card {
-            border: 1px solid rgba(201,168,76,0.12); padding: 2.5rem;
-            background: var(--black-3); transition: border-color 0.3s;
-        }
-        .testimonial-card:hover { border-color: rgba(201,168,76,0.3); }
-        .stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 1.5rem; letter-spacing: 3px; }
-        .testimonial-text {
-            font-family: var(--font-display); font-style: italic; font-size: 1.15rem;
-            line-height: 1.7; color: var(--white); margin-bottom: 2rem;
-        }
-        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
-        .author-avatar {
-            width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
-            border: 1px solid rgba(201,168,76,0.3);
-        }
-        .author-name { font-weight: 600; font-size: 0.9rem; }
-        .author-role { color: var(--white-dimmer); font-size: 0.78rem; margin-top: 2px; }
+/* FAQ */
+.faq { padding: 9rem 5%; background: var(--black-2); }
+.faq-inner { max-width: 800px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid rgba(255,255,255,.07); }
+.faq-q { display: flex; justify-content: space-between; align-items: center; padding: 1.8rem 0; cursor: pointer; font-weight: 500; font-size: .98rem; transition: color .3s; gap: 2rem; }
+.faq-q:hover { color: var(--white-2); }
+.faq-icon { color: var(--white-3); font-size: .85rem; transition: transform .3s; flex-shrink: 0; }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-a { overflow: hidden; max-height: 0; transition: max-height .4s ease; }
+.faq-item.open .faq-a { max-height: 260px; }
+.faq-a p { color: var(--white-3); font-size: .92rem; line-height: 1.8; padding-bottom: 1.8rem; }
 
-        /* ── FAQ ── */
-        .faq { padding: 8rem 5%; background: var(--black); }
-        .faq-inner { max-width: 780px; margin: 0 auto; }
-        .faq-item {
-            border-bottom: 1px solid rgba(201,168,76,0.12);
-        }
-        .faq-question {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.8rem 0; cursor: pointer; transition: color 0.3s;
-            font-weight: 500; font-size: 1rem;
-        }
-        .faq-question:hover { color: var(--gold); }
-        .faq-icon { color: var(--gold); font-size: 0.9rem; transition: transform 0.3s; }
-        .faq-item.open .faq-icon { transform: rotate(45deg); }
-        .faq-answer {
-            overflow: hidden; max-height: 0; transition: max-height 0.4s ease, padding 0.3s;
-        }
-        .faq-item.open .faq-answer { max-height: 300px; }
-        .faq-answer p { color: var(--white-dim); font-size: 0.93rem; line-height: 1.8; padding-bottom: 1.8rem; }
+/* CONTACTO */
+.contact { padding: 9rem 5%; background: var(--black); }
+.contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.5fr; gap: 6rem; align-items: start; }
+.c-info { display: flex; flex-direction: column; gap: 2rem; }
+.c-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+.c-icon { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; color: var(--white-3); font-size: .95rem; flex-shrink: 0; transition: all .3s; }
+.c-item:hover .c-icon { background: var(--white); color: var(--black); border-color: var(--white); }
+.c-item h4 { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-4); margin-bottom: .25rem; }
+.c-item p { color: var(--white-2); font-size: .92rem; }
+.calendly-wrapper { border: 1px solid rgba(255,255,255,.1); overflow: hidden; background: var(--black-3); }
+.calendly-header { padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: 8px; }
+.cal-dot { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.calendly-header-txt { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--white-4); margin-left: auto; }
 
-        /* ── CONTACTO / CALENDLY ── */
-        .contact { padding: 8rem 5%; background: var(--black-2); }
-        .contact-inner {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start;
-        }
-        .contact-info { display: flex; flex-direction: column; gap: 2.5rem; }
-        .contact-item { display: flex; gap: 1.2rem; align-items: flex-start; }
-        .contact-icon-box {
-            width: 44px; height: 44px; border: 1px solid rgba(201,168,76,0.3);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--gold); font-size: 1rem; flex-shrink: 0;
-        }
-        .contact-item h4 { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
-        .contact-item p { color: var(--white-dim); font-size: 0.93rem; }
-        .calendly-wrapper {
-            border: 1px solid rgba(201,168,76,0.2); overflow: hidden;
-            background: var(--black-3);
-        }
-        .calendly-header {
-            padding: 1.2rem 1.8rem;
-            border-bottom: 1px solid rgba(201,168,76,0.15);
-            display: flex; align-items: center; gap: 10px;
-        }
-        .calendly-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .calendly-dot.green { background: #2ecc71; animation: blink 2s infinite; }
-        .calendly-header-text {
-            font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--white-dim); margin-left: auto;
-        }
+/* CTA BANNER */
+.cta-banner { padding: 7rem 5%; background: var(--white); text-align: center; position: relative; overflow: hidden; }
+.cta-banner::before { content: 'IGNITE'; font-family: var(--font-display); font-size: 20vw; color: rgba(0,0,0,.04); position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; white-space: nowrap; }
+.cta-banner h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); color: var(--black); line-height: .9; margin-bottom: 1.2rem; position: relative; }
+.cta-banner h2 .italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+.cta-banner p { color: var(--black-4); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; position: relative; font-size: .98rem; }
+.cta-banner .btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; position: relative; }
+.btn-black { background: var(--black); color: var(--white); padding: .9rem 2.2rem; font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; display: inline-block; font-family: var(--font-body); border: none; cursor: pointer; }
+.btn-black:hover { background: var(--black-3); transform: translateY(-2px); }
+.btn-outline-b { background: transparent; color: var(--black); border: 1.5px solid var(--black); padding: .9rem 2.2rem; font-size: .82rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; transition: all .3s; display: inline-block; font-family: var(--font-body); }
+.btn-outline-b:hover { background: var(--black); color: var(--white); }
 
-        /* ── FOOTER ── */
-        footer {
-            background: var(--black); padding: 5rem 5% 2rem;
-            border-top: 1px solid rgba(201,168,76,0.12);
-        }
-        .footer-top {
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
-            max-width: 1200px; margin: 0 auto 4rem; padding-bottom: 4rem;
-            border-bottom: 1px solid rgba(201,168,76,0.1);
-        }
-        .footer-brand .logo { display: block; margin-bottom: 1.2rem; }
-        .footer-brand .logo img { height: 32px; }
-        .footer-brand p { color: var(--white-dimmer); font-size: 0.88rem; line-height: 1.8; max-width: 260px; margin-bottom: 2rem; }
-        .footer-socials { display: flex; gap: 0.8rem; }
-        .footer-social {
-            width: 36px; height: 36px; border: 1px solid rgba(201,168,76,0.25);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--white-dim); text-decoration: none; font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-        .footer-social:hover { border-color: var(--gold); color: var(--gold); }
-        .footer-col h5 {
-            font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 1.5rem;
-        }
-        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
-        .footer-col a { color: var(--white-dimmer); text-decoration: none; font-size: 0.88rem; transition: color 0.3s; }
-        .footer-col a:hover { color: var(--white); }
-        .footer-bottom {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-            color: var(--white-dimmer); font-size: 0.8rem;
-        }
+/* FOOTER */
+footer { background: var(--black-2); padding: 5rem 5% 2rem; border-top: 1px solid rgba(255,255,255,.06); }
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; max-width: 1440px; margin: 0 auto 4rem; padding-bottom: 4rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+.footer-brand .logo-img { height: 36px; display: block; margin-bottom: 1.2rem; }
+.footer-brand p { color: var(--white-4); font-size: .86rem; line-height: 1.8; max-width: 260px; margin-bottom: 1.8rem; }
+.footer-socials { display: flex; gap: .6rem; }
+.f-social { width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; color: var(--white-4); text-decoration: none; font-size: .82rem; transition: all .3s; }
+.f-social:hover { border-color: var(--white); color: var(--white); }
+.footer-col h5 { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--white-3); margin-bottom: 1.4rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+.footer-col a { color: var(--white-4); text-decoration: none; font-size: .86rem; transition: color .3s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; color: var(--white-4); font-size: .78rem; }
 
-        /* ── WHATSAPP ── */
-        .whatsapp-float {
-            position: fixed; bottom: 28px; right: 28px;
-            width: 56px; height: 56px; background: #25d366;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.6rem; z-index: 999;
-            box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all 0.3s;
-            text-decoration: none;
-        }
-        .whatsapp-float:hover { transform: scale(1.1); background: #1fad57; }
+/* WHATSAPP */
+.wa-float { position: fixed; bottom: 28px; right: 28px; width: 54px; height: 54px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; z-index: 999; box-shadow: 0 4px 20px rgba(37,211,102,.4); transition: all .3s; text-decoration: none; }
+.wa-float:hover { transform: scale(1.1); background: #1fad57; }
 
-        /* ── CTA BANNER ── */
-        .cta-banner {
-            padding: 6rem 5%; background: var(--black-3);
-            border-top: 1px solid rgba(201,168,76,0.12);
-            border-bottom: 1px solid rgba(201,168,76,0.12);
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .cta-banner::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 70%);
-        }
-        .cta-banner h2 {
-            font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 300; margin-bottom: 1.2rem; position: relative;
-        }
-        .cta-banner h2 em { font-style: italic; color: var(--gold); }
-        .cta-banner p { color: var(--white-dim); margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; position: relative; }
-        .cta-banner .buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; position: relative; }
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s, transform .7s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-        /* ── REVEAL ANIMATIONS ── */
-        .reveal {
-            opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s;
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 1024px) {
-            .stats-inner { grid-template-columns: repeat(2, 1fr); }
-            .services-grid { grid-template-columns: 1fr; }
-            .why-inner { grid-template-columns: 1fr; }
-            .why-visual { display: none; }
-            .pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
-            .contact-inner { grid-template-columns: 1fr; }
-            .footer-top { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-menu { display: block; }
-            .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(8,8,8,0.98); padding: 2rem 5%; gap: 1.5rem; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            .process-grid { grid-template-columns: 1fr 1fr; }
-            .testimonials-grid { grid-template-columns: 1fr; }
-            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
-            .footer-top { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 576px) {
-            .process-grid { grid-template-columns: 1fr; }
-            .stats-inner { grid-template-columns: repeat(2,1fr); }
-        }
-
-        /* ── COTIZADOR ── */
-        .cotizador { padding: 8rem 5%; background: var(--black-3); }
-        .cotizador-inner { max-width: 1100px; margin: 0 auto; }
-        .cotizador-grid {
-            display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; margin-top: 1rem; align-items: start;
-        }
-        .cotizador-form-panel {
-            background: var(--black-2); border: 1px solid rgba(201,168,76,0.18); padding: 2.5rem;
-        }
-        .cotizador-result-panel {
-            background: var(--black); border: 1px solid rgba(201,168,76,0.3);
-            padding: 2.5rem; position: sticky; top: 120px;
-        }
-        .cotizador-section-title {
-            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
-            color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase;
-            margin-bottom: 1.2rem; padding-bottom: 0.6rem;
-            border-bottom: 1px solid rgba(201,168,76,0.15);
-            display: flex; align-items: center; gap: 8px;
-        }
-        .cotizador-block { margin-bottom: 2.2rem; }
-        .cot-label {
-            font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--white-dim); margin-bottom: 0.7rem; display: block;
-        }
-        .cot-options { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-        .cot-option {
-            border: 1px solid rgba(201,168,76,0.2); padding: 0.55rem 1.1rem;
-            font-size: 0.85rem; color: var(--white-dim); cursor: pointer;
-            transition: all 0.25s; user-select: none; background: transparent;
-            font-family: var(--font-body);
-        }
-        .cot-option:hover { border-color: var(--gold); color: var(--white); }
-        .cot-option.selected { background: var(--gold); border-color: var(--gold); color: var(--black); font-weight: 600; }
-        .cot-option.multi.selected { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
-        .cot-input {
-            width: 100%; background: var(--black-3); border: 1px solid rgba(201,168,76,0.2);
-            color: var(--white); padding: 0.75rem 1rem; font-family: var(--font-body);
-            font-size: 0.9rem; transition: border-color 0.3s;
-        }
-        .cot-input:focus { outline: none; border-color: var(--gold); }
-        /* Result panel */
-        .result-label {
-            font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white-dimmer);
-        }
-        .result-total {
-            font-family: var(--font-display); font-size: 3.2rem; font-weight: 700;
-            color: var(--gold); line-height: 1; margin: 0.3rem 0 0.2rem;
-        }
-        .result-note { font-size: 0.8rem; color: var(--white-dimmer); margin-bottom: 1.8rem; }
-        .result-divider { height: 1px; background: rgba(201,168,76,0.15); margin: 1.4rem 0; }
-        .result-line {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            gap: 1rem; margin-bottom: 0.8rem;
-        }
-        .result-line-label { font-size: 0.85rem; color: var(--white-dim); flex: 1; }
-        .result-line-val { font-size: 0.85rem; color: var(--white); font-weight: 500; white-space: nowrap; }
-        .result-line-val.gold { color: var(--gold); }
-        .result-empty {
-            text-align: center; padding: 2rem 0; color: var(--white-dimmer);
-            font-size: 0.88rem; font-style: italic;
-        }
-        .client-fields { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
-        .client-field-group { display: flex; flex-direction: column; gap: 0.3rem; }
-        .client-field-group label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white-dimmer); }
-        .btn-download {
-            width: 100%; background: var(--gold); border: none; color: var(--black);
-            padding: 1rem; font-family: var(--font-body); font-size: 0.85rem;
-            font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-            cursor: pointer; transition: all 0.3s; display: flex; align-items: center;
-            justify-content: center; gap: 8px;
-        }
-        .btn-download:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
-        .btn-download:disabled { background: var(--black-4); color: var(--white-dimmer); cursor: not-allowed; transform: none; box-shadow: none; }
-        .cot-range-wrap { display: flex; align-items: center; gap: 1rem; }
-        .cot-range {
-            flex: 1; -webkit-appearance: none; height: 3px; background: rgba(201,168,76,0.2);
-            outline: none; border-radius: 2px;
-        }
-        .cot-range::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 18px; height: 18px;
-            background: var(--gold); border-radius: 50%; cursor: pointer;
-        }
-        .cot-range-val {
-            font-family: var(--font-display); font-size: 1.4rem; font-weight: 700;
-            color: var(--gold); min-width: 30px; text-align: right;
-        }
-        @media (max-width: 900px) {
-            .cotizador-grid { grid-template-columns: 1fr; }
-            .cotizador-result-panel { position: static; }
-        }
-    </style>
-    <!-- jsPDF Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+/* RESPONSIVE */
+@media (max-width:1100px) {
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .why-inner { grid-template-columns: 1fr; }
+  .why-visual { display: none; }
+  .contact-inner { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .process-steps { grid-template-columns: repeat(2,1fr); }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .cot-grid { grid-template-columns: 1fr; }
+  .cot-result { position: static; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10,10,10,.98); padding: 2rem 5%; gap: 1.5rem; }
+  .mobile-menu { display: block; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .test-grid { grid-template-columns: 1fr; }
+  .svc { grid-template-columns: 40px 1fr; gap: 1.5rem; }
+  .svc-arrow { display: none; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-top { grid-template-columns: 1fr; }
+}
+@media (max-width: 576px) {
+  .process-steps { grid-template-columns: 1fr; }
+  .hero-h1 { font-size: clamp(4rem, 18vw, 6rem); }
+}
+</style>
 </head>
 <body>
 
-<div class="cursor"></div>
-<div class="cursor-follower"></div>
+<div class="cur"></div>
+<div class="cur-ring"></div>
 
-<!-- BARRA DE URGENCIA -->
-<div class="urgency-bar">
-    <span>🔥</span> Solo quedan <strong>2 proyectos disponibles</strong> para este mes — Agenda tu llamada ahora <span>🔥</span>
+<!-- POPUP -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-box">
+    <div class="popup-stripe"></div>
+    <button class="popup-close" id="popupClose"><i class="fas fa-times"></i></button>
+    <div class="popup-top">
+      <div class="popup-badge">Aviso importante</div>
+      <div class="popup-title">Solo quedan<br><span>2 spots</span><br>este mes</div>
+    </div>
+    <div class="popup-body">
+      <p>Trabajo con un número limitado de clientes cada mes para garantizar atención total y resultados reales. Este mes únicamente quedan <strong>2 proyectos disponibles</strong>.</p>
+      <div class="popup-spots">
+        <div class="spot-dot taken"></div>
+        <div class="spot-dot taken"></div>
+        <div class="spot-dot taken"></div>
+        <div class="spot-dot"></div>
+        <div class="spot-dot"></div>
+        <span class="popup-spots-text">3 de 5 spots ocupados</span>
+      </div>
+      <div class="popup-cta">
+        <a href="#contacto" class="cta-primary" id="popupCTA">Reservar mi spot ahora</a>
+        <a href="#servicios" class="cta-secondary" id="popupDismiss">Ver servicios primero</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- HEADER -->
 <header id="header">
-    <nav class="navbar">
-        <a href="#inicio" class="logo">
-            <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite">
-        </a>
-        <div class="nav-links" id="navLinks">
-            <a href="#servicios">Servicios</a>
-            <a href="#portafolio">Portafolio</a>
-            <a href="#precios">Precios</a>
-            <a href="#cotizador">Cotizador</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contacto">Contacto</a>
-        </div>
-        <a href="#contacto" class="btn-gold">Agendar Llamada</a>
-        <div class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></div>
-    </nav>
+  <nav class="navbar">
+    <a href="#inicio" class="logo">
+      <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite" id="logoImg">
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#servicios">Servicios</a>
+      <a href="#portafolio">Portafolio</a>
+      <a href="#precios">Precios</a>
+      <a href="#cotizador">Cotizador</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a href="#contacto" class="btn-nav">Agendar Llamada</a>
+    <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+  </nav>
 </header>
 
 <!-- HERO -->
 <section class="hero" id="inicio">
-    <div class="hero-bg"></div>
-    <div class="hero-grid"></div>
-    <div class="hero-content">
-        <div class="hero-badge">Disponible para nuevos proyectos</div>
-        <h1>
-            Sitios web que<br>
-            <em>convierten</em> visitantes<br>
-            en <strong>clientes</strong>
-        </h1>
-        <p class="hero-sub">Diseño y desarrollo web premium para marcas ambiciosas. Cada pixel, cada línea de código y cada decisión de diseño está pensada para hacer crecer tu negocio.</p>
-        <div class="hero-buttons">
-            <a href="#contacto" class="btn-gold-fill">Agendar consultoría gratuita</a>
-            <a href="#portafolio" class="btn-gold">Ver portafolio</a>
-        </div>
+  <div class="hero-bg"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-pre">
+        <div class="hero-pre-line"></div>
+        <span class="hero-pre-text">Agencia digital · Disponible ahora</span>
+      </div>
+      <h1 class="hero-h1">
+        DISEÑO<br>
+        <span class="italic">que</span><br>
+        <span class="stroke">VENDE</span>
+      </h1>
+      <p class="hero-desc">Páginas web, e-commerce y consultoría de marketing digital para marcas que quieren liderar. No plantillas — estrategia, diseño y código a medida.</p>
+      <div class="hero-actions">
+        <a href="#contacto" class="btn-white">Consultoría gratuita</a>
+        <a href="#portafolio" class="btn-outline">Ver trabajo</a>
+      </div>
     </div>
-    <div class="hero-scroll">
-        <div class="hero-scroll-line"></div>
-        <span>Scroll</span>
+    <div class="hero-right">
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-target="47">0</span>
+        <span class="hero-stat-label">Proyectos entregados</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-target="98">0</span>
+        <span class="hero-stat-label">% Satisfacción</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" data-target="5">0</span>
+        <span class="hero-stat-label">Años de experiencia</span>
+      </div>
     </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-anim"></div>
+    <span>Scroll</span>
+  </div>
 </section>
 
-<!-- STATS -->
-<section class="stats">
-    <div class="stats-inner reveal">
-        <div class="stat-item">
-            <span class="stat-num" data-target="47">0</span>
-            <span class="stat-label">Proyectos completados</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num" data-target="98">0</span>
-            <span class="stat-label">% Clientes satisfechos</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num" data-target="5">0</span>
-            <span class="stat-label">Años de experiencia</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-num" data-target="3">0</span>
-            <span class="stat-label">Días promedio de respuesta</span>
-        </div>
-    </div>
-</section>
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Desarrollo Web</div>
+    <div class="marquee-item">E-Commerce</div>
+    <div class="marquee-item">Marketing Digital</div>
+    <div class="marquee-item">SEO Avanzado</div>
+    <div class="marquee-item">Diseño UI/UX</div>
+    <div class="marquee-item">Consultoría Digital</div>
+    <div class="marquee-item">Redes Sociales</div>
+    <div class="marquee-item">Branding</div>
+    <div class="marquee-item">Desarrollo Web</div>
+    <div class="marquee-item">E-Commerce</div>
+    <div class="marquee-item">Marketing Digital</div>
+    <div class="marquee-item">SEO Avanzado</div>
+    <div class="marquee-item">Diseño UI/UX</div>
+    <div class="marquee-item">Consultoría Digital</div>
+    <div class="marquee-item">Redes Sociales</div>
+    <div class="marquee-item">Branding</div>
+  </div>
+</div>
 
 <!-- SERVICIOS -->
 <section class="services" id="servicios">
-    <div class="services-inner">
-        <div class="section-header reveal">
-            <span class="section-label">Lo que hago</span>
-            <h2 class="section-title">Servicios diseñados para<br><em>resultados reales</em></h2>
-            <div class="divider"></div>
-            <p class="section-sub">No solo construyo sitios bonitos — construyo máquinas de conversión que trabajan para tu negocio las 24 horas.</p>
-        </div>
-        <div class="services-grid reveal">
-            <div class="service-card">
-                <div class="service-num">01</div>
-                <div class="service-icon-wrap"><i class="fas fa-laptop-code"></i></div>
-                <h3>Desarrollo Web a Medida</h3>
-                <p>Sitios web únicos construidos desde cero para tu marca. Sin plantillas, sin límites. Velocidad de carga óptima, código limpio y arquitectura escalable.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="service-card">
-                <div class="service-num">02</div>
-                <div class="service-icon-wrap"><i class="fas fa-shopping-bag"></i></div>
-                <h3>E-Commerce Premium</h3>
-                <p>Tiendas online optimizadas para vender. Checkout rápido, pasarelas de pago seguras, gestión de inventario y experiencia de compra que genera confianza.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="service-card">
-                <div class="service-num">03</div>
-                <div class="service-icon-wrap"><i class="fas fa-search"></i></div>
-                <h3>Optimización SEO</h3>
-                <p>Aparecer en Google no es suerte — es estrategia. Optimizo tu sitio para que tus clientes te encuentren antes que a tu competencia.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="service-card">
-                <div class="service-num">04</div>
-                <div class="service-icon-wrap"><i class="fas fa-palette"></i></div>
-                <h3>Diseño UI/UX</h3>
-                <p>Interfaces que deleitan a los usuarios y los guían naturalmente hacia la conversión. Diseño basado en psicología del usuario y datos reales.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="service-card">
-                <div class="service-num">05</div>
-                <div class="service-icon-wrap"><i class="fas fa-mobile-alt"></i></div>
-                <h3>Diseño Responsive</h3>
-                <p>El 70% del tráfico web viene de móviles. Cada proyecto está perfecto en todos los dispositivos — sin compromisos, sin excepciones.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="service-card">
-                <div class="service-num">06</div>
-                <div class="service-icon-wrap"><i class="fas fa-tools"></i></div>
-                <h3>Mantenimiento & Soporte</h3>
-                <p>Tu sitio siempre actualizado, seguro y funcionando al 100%. Soporte rápido cuando lo necesites, sin burocracia ni tiempos de espera infinitos.</p>
-                <a href="#contacto" class="service-link">Solicitar proyecto <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
+  <div class="services-inner">
+    <div class="sec-header sec-header-row reveal">
+      <div>
+        <span class="sec-eyebrow">Lo que hacemos</span>
+        <h2 class="sec-title">SERVICIOS QUE<br><span class="italic">transforman</span><br><span class="stroke">NEGOCIOS</span></h2>
+      </div>
+      <p class="sec-sub">No construimos sitios bonitos. Construimos máquinas de conversión respaldadas por estrategia real.</p>
     </div>
+    <div class="services-list reveal">
+      <div class="svc">
+        <div class="svc-num">01</div>
+        <div class="svc-body">
+          <h3>Desarrollo Web a Medida</h3>
+          <p>Sitios web únicos construidos desde cero. Sin plantillas, sin límites. Código limpio, velocidad óptima y arquitectura pensada para escalar.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">HTML/CSS/JS</span>
+            <span class="svc-tag">React</span>
+            <span class="svc-tag">WordPress</span>
+            <span class="svc-tag">Next.js</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-body">
+          <h3>E-Commerce Premium</h3>
+          <p>Tiendas online optimizadas para vender. Checkout rápido, pasarelas de pago, gestión de inventario y UX que genera confianza y conversiones.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">WooCommerce</span>
+            <span class="svc-tag">Shopify</span>
+            <span class="svc-tag">Stripe</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">03</div>
+        <div class="svc-body">
+          <h3>Consultoría de Marketing Digital</h3>
+          <p>Estrategia completa: redes sociales, paid media, email marketing y funnel de ventas. Del clic al cliente, acompañado de datos reales.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Meta Ads</span>
+            <span class="svc-tag">Google Ads</span>
+            <span class="svc-tag">Email Marketing</span>
+            <span class="svc-tag">Analytics</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">04</div>
+        <div class="svc-body">
+          <h3>SEO & Posicionamiento</h3>
+          <p>Aparecer en Google no es suerte — es estrategia. Auditoría técnica, contenido optimizado y link building para superar a tu competencia.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">SEO Técnico</span>
+            <span class="svc-tag">On-page</span>
+            <span class="svc-tag">Link Building</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">05</div>
+        <div class="svc-body">
+          <h3>Diseño UI/UX</h3>
+          <p>Interfaces que deleitan y convierten. Wireframes, prototipos interactivos y sistemas de diseño basados en psicología del usuario.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Figma</span>
+            <span class="svc-tag">Prototipado</span>
+            <span class="svc-tag">User Testing</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">06</div>
+        <div class="svc-body">
+          <h3>Gestión de Redes Sociales</h3>
+          <p>Contenido estratégico, diseño visual consistente y comunidad activa. Presencia digital que refleja tu marca y atrae a tu cliente ideal.</p>
+          <div class="svc-tags">
+            <span class="svc-tag">Instagram</span>
+            <span class="svc-tag">LinkedIn</span>
+            <span class="svc-tag">TikTok</span>
+          </div>
+        </div>
+        <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- POR QUÉ YO -->
 <section class="why" id="porque">
-    <div class="why-inner">
-        <div class="why-visual reveal">
-            <div class="why-box">
-                <div class="why-corner tl"></div>
-                <div class="why-corner br"></div>
-                <div class="why-box-inner">
-                    <div class="why-big-num">5★</div>
-                    <div class="why-big-label">Calificación promedio<br>de todos los proyectos</div>
-                </div>
-            </div>
-        </div>
-        <div class="reveal">
-            <span class="section-label">Por qué elegirme</span>
-            <h2 class="section-title">No soy una agencia.<br>Soy <em>tu socio digital</em></h2>
-            <div class="divider"></div>
-            <div class="why-list">
-                <div class="why-item">
-                    <div class="why-check"><i class="fas fa-check"></i></div>
-                    <div>
-                        <h4>Trato directo, sin intermediarios</h4>
-                        <p>Hablas directamente conmigo en cada etapa. Sin account managers, sin malentendidos, sin sorpresas.</p>
-                    </div>
-                </div>
-                <div class="why-item">
-                    <div class="why-check"><i class="fas fa-check"></i></div>
-                    <div>
-                        <h4>Entrega a tiempo, garantizada</h4>
-                        <p>Cada proyecto tiene plazos claros y los cumplo. Si me retraso, trabajo gratis hasta terminarlo.</p>
-                    </div>
-                </div>
-                <div class="why-item">
-                    <div class="why-check"><i class="fas fa-check"></i></div>
-                    <div>
-                        <h4>Diseño orientado a resultados</h4>
-                        <p>Cada decisión de diseño tiene un "por qué" basado en conversión y experiencia de usuario, no en caprichos visuales.</p>
-                    </div>
-                </div>
-                <div class="why-item">
-                    <div class="why-check"><i class="fas fa-check"></i></div>
-                    <div>
-                        <h4>Soporte post-lanzamiento incluido</h4>
-                        <p>30 días de soporte gratuito después de entregar tu proyecto. No desaparezco una vez cobrado.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="why-inner">
+    <div class="why-visual reveal">
+      <div class="why-big-text">WHY<br>IGNITE</div>
+      <div class="why-card-float">
+        <div class="n">5★</div>
+        <div class="l">Calificación promedio<br>en todos los proyectos</div>
+      </div>
     </div>
+    <div class="reveal">
+      <span class="sec-eyebrow">Por qué elegirnos</span>
+      <h2 class="sec-title" style="font-size:clamp(2.5rem,4vw,4rem)">NO SOMOS<br>UNA <span class="italic">agencia</span><br>MÁS</h2>
+      <div style="width:50px;height:2px;background:var(--white);margin:1.5rem 0 2.5rem;"></div>
+      <div class="why-perks">
+        <div class="perk">
+          <div class="perk-icon"><i class="fas fa-user"></i></div>
+          <div>
+            <h4>Trato directo, sin intermediarios</h4>
+            <p>Hablas conmigo en cada etapa. Sin account managers, sin malentendidos, sin sorpresas en el precio final.</p>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon"><i class="fas fa-clock"></i></div>
+          <div>
+            <h4>Entrega a tiempo, garantizada</h4>
+            <p>Plazos claros desde el día uno. Si me retraso, trabajo gratis hasta terminar. Sin excusas.</p>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <h4>Diseño orientado a resultados</h4>
+            <p>Cada decisión tiene un "por qué" basado en datos de conversión y comportamiento de usuario real.</p>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <h4>Soporte post-lanzamiento incluido</h4>
+            <p>30 días de soporte gratuito después de entregar tu proyecto. No desaparezco una vez cobrado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- PORTAFOLIO -->
 <section class="portfolio" id="portafolio">
-    <div class="portfolio-inner">
-        <div class="section-header reveal">
-            <span class="section-label">Trabajo reciente</span>
-            <h2 class="section-title">Proyectos que hablan<br><em>por sí solos</em></h2>
-            <div class="divider"></div>
-        </div>
-        <div class="portfolio-grid reveal">
-            <div class="portfolio-item">
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Luxury Brand E-Commerce" class="portfolio-img">
-                <div class="portfolio-overlay">
-                    <span class="portfolio-tag">E-Commerce</span>
-                    <h3>Luxury Brand E-Commerce</h3>
-                    <p>Tienda premium con CRM integrado y sistema de reservas. +140% en conversiones.</p>
-                </div>
-            </div>
-            <div class="portfolio-item">
-                <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80" alt="Corporate Platform" class="portfolio-img">
-                <div class="portfolio-overlay">
-                    <span class="portfolio-tag">Plataforma Corporativa</span>
-                    <h3>Corporate Business Platform</h3>
-                    <p>Dashboard administrativo con sistema de usuarios y reporting avanzado en tiempo real.</p>
-                </div>
-            </div>
-            <div class="portfolio-item">
-                <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=800&q=80" alt="Creative Agency" class="portfolio-img">
-                <div class="portfolio-overlay">
-                    <span class="portfolio-tag">Agencia Creativa</span>
-                    <h3>Creative Agency Website</h3>
-                    <p>Portfolio interactivo con animaciones personalizadas y CMS exclusivo hecho a medida.</p>
-                </div>
-            </div>
-        </div>
+  <div class="portfolio-inner">
+    <div class="sec-header reveal">
+      <span class="sec-eyebrow">Trabajo reciente</span>
+      <h2 class="sec-title">PROYECTOS QUE<br><span class="italic">hablan</span> POR SÍ SOLOS</h2>
     </div>
+    <div class="portfolio-grid reveal">
+      <div class="port-item">
+        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" alt="Luxury E-Commerce" class="port-item-img">
+        <div class="port-overlay">
+          <span class="port-tag">E-Commerce · Marketing Digital</span>
+          <h3 class="port-title">Luxury Brand E-Commerce</h3>
+          <p class="port-desc">Tienda premium con CRM integrado y campañas Meta Ads. +140% en conversiones en 3 meses.</p>
+        </div>
+      </div>
+      <div class="port-item">
+        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80" alt="Corporate Platform" class="port-item-img">
+        <div class="port-overlay">
+          <span class="port-tag">Plataforma Corporativa</span>
+          <h3 class="port-title">Corporate Business Platform</h3>
+          <p class="port-desc">Dashboard admin con sistema de usuarios, reporting en tiempo real y estrategia SEO completa.</p>
+        </div>
+      </div>
+      <div class="port-item">
+        <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=800&q=80" alt="Creative Agency" class="port-item-img">
+        <div class="port-overlay">
+          <span class="port-tag">Agencia Creativa · Redes Sociales</span>
+          <h3 class="port-title">Creative Agency Website</h3>
+          <p class="port-desc">Portfolio interactivo + gestión de redes sociales con crecimiento de +8K seguidores en 60 días.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- PROCESO -->
 <section class="process" id="proceso">
-    <div class="process-inner">
-        <div class="section-header reveal">
-            <span class="section-label">Cómo trabajo</span>
-            <h2 class="section-title">Del briefing al<br><em>lanzamiento exitoso</em></h2>
-            <div class="divider"></div>
-        </div>
-        <div class="process-grid reveal">
-            <div class="step">
-                <span class="step-num">01</span>
-                <div class="step-icon"><i class="fas fa-comments"></i></div>
-                <h3>Consultoría Inicial</h3>
-                <p>Analizamos tus objetivos, audiencia ideal y competencia. Definimos juntos la estrategia perfecta para tu proyecto.</p>
-            </div>
-            <div class="step">
-                <span class="step-num">02</span>
-                <div class="step-icon"><i class="fas fa-pencil-ruler"></i></div>
-                <h3>Diseño Exclusivo</h3>
-                <p>Wireframes, mockups y prototipo interactivo. Ves exactamente cómo quedará tu sitio antes de escribir una línea de código.</p>
-            </div>
-            <div class="step">
-                <span class="step-num">03</span>
-                <div class="step-icon"><i class="fas fa-code"></i></div>
-                <h3>Desarrollo Avanzado</h3>
-                <p>Código limpio, optimizado y escalable. Pruebas exhaustivas en todos los dispositivos y navegadores.</p>
-            </div>
-            <div class="step">
-                <span class="step-num">04</span>
-                <div class="step-icon"><i class="fas fa-rocket"></i></div>
-                <h3>Lanzamiento & Soporte</h3>
-                <p>Despliegue profesional, configuración SEO inicial y 30 días de soporte incluido para garantizar el éxito.</p>
-            </div>
-        </div>
+  <div class="process-inner">
+    <div class="sec-header reveal">
+      <span class="sec-eyebrow">Cómo trabajamos</span>
+      <h2 class="sec-title">DEL BRIEFING<br>AL <span class="italic">éxito</span></h2>
     </div>
+    <div class="process-steps reveal">
+      <div class="step">
+        <span class="step-n">01</span>
+        <div class="step-icon"><i class="fas fa-comments"></i></div>
+        <h3>Consultoría Inicial</h3>
+        <p>Analizamos objetivos, audiencia y competencia. Definimos juntos la estrategia perfecta.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">02</span>
+        <div class="step-icon"><i class="fas fa-pencil-ruler"></i></div>
+        <h3>Diseño Exclusivo</h3>
+        <p>Wireframes, mockups y prototipo interactivo. Ves el resultado antes de escribir código.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">03</span>
+        <div class="step-icon"><i class="fas fa-code"></i></div>
+        <h3>Desarrollo Avanzado</h3>
+        <p>Código limpio, optimizado y escalable. Pruebas en todos los dispositivos y navegadores.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">04</span>
+        <div class="step-icon"><i class="fas fa-rocket"></i></div>
+        <h3>Lanzamiento & Crecimiento</h3>
+        <p>Deploy profesional, configuración SEO y 30 días de soporte. Tu éxito es nuestro éxito.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- PRECIOS -->
 <section class="pricing" id="precios">
-    <div class="pricing-inner">
-        <div class="section-header reveal" style="text-align:center; max-width:600px; margin: 0 auto 4rem;">
-            <span class="section-label">Inversión</span>
-            <h2 class="section-title">Planes claros,<br><em>sin sorpresas</em></h2>
-            <div class="divider" style="margin: 1.5rem auto;"></div>
-            <p class="section-sub" style="max-width:100%">Transparencia total desde el primer momento. Sabes exactamente qué recibes por cada inversión.</p>
-        </div>
-        <div class="pricing-grid reveal">
-            <div class="price-card">
-                <div class="price-plan">Básico</div>
-                <div class="price-num"><sup>$</sup>499</div>
-                <div class="price-period">Pago único · Entrega en 7 días</div>
-                <div class="price-divider"></div>
-                <p class="price-desc">Ideal para freelancers, emprendedores y pequeños negocios que necesitan presencia web profesional.</p>
-                <ul class="price-features">
-                    <li><i class="fas fa-check"></i> Hasta 5 páginas</li>
-                    <li><i class="fas fa-check"></i> Diseño responsive</li>
-                    <li><i class="fas fa-check"></i> Formulario de contacto</li>
-                    <li><i class="fas fa-check"></i> SEO básico</li>
-                    <li><i class="fas fa-check"></i> 15 días de soporte</li>
-                    <li class="disabled"><i class="fas fa-times"></i> E-Commerce</li>
-                    <li class="disabled"><i class="fas fa-times"></i> Integraciones avanzadas</li>
-                </ul>
-                <a href="#contacto" class="btn-gold" style="width:100%; text-align:center; display:block;">Empezar</a>
-            </div>
-            <div class="price-card featured">
-                <div class="price-badge">Más Popular</div>
-                <div class="price-plan">Profesional</div>
-                <div class="price-num"><sup>$</sup>999</div>
-                <div class="price-period">Pago único · Entrega en 14 días</div>
-                <div class="price-divider"></div>
-                <p class="price-desc">Para negocios en crecimiento que necesitan un sitio web que realmente convierta y venda.</p>
-                <ul class="price-features">
-                    <li><i class="fas fa-check"></i> Hasta 10 páginas</li>
-                    <li><i class="fas fa-check"></i> Diseño UI/UX personalizado</li>
-                    <li><i class="fas fa-check"></i> Animaciones & microinteracciones</li>
-                    <li><i class="fas fa-check"></i> SEO avanzado</li>
-                    <li><i class="fas fa-check"></i> Integración con herramientas</li>
-                    <li><i class="fas fa-check"></i> 30 días de soporte</li>
-                    <li class="disabled"><i class="fas fa-times"></i> E-Commerce completo</li>
-                </ul>
-                <a href="#contacto" class="btn-gold-fill" style="width:100%; text-align:center; display:block;">Empezar</a>
-            </div>
-            <div class="price-card">
-                <div class="price-plan">E-Commerce</div>
-                <div class="price-num"><sup>$</sup>1,899</div>
-                <div class="price-period">Pago único · Entrega en 21 días</div>
-                <div class="price-divider"></div>
-                <p class="price-desc">Tienda online completa y optimizada para vender. Todo lo que necesitas para empezar a facturar en línea.</p>
-                <ul class="price-features">
-                    <li><i class="fas fa-check"></i> Páginas ilimitadas</li>
-                    <li><i class="fas fa-check"></i> Tienda online completa</li>
-                    <li><i class="fas fa-check"></i> Pasarelas de pago</li>
-                    <li><i class="fas fa-check"></i> Gestión de inventario</li>
-                    <li><i class="fas fa-check"></i> CRM integrado</li>
-                    <li><i class="fas fa-check"></i> 60 días de soporte</li>
-                    <li><i class="fas fa-check"></i> Capacitación incluida</li>
-                </ul>
-                <a href="#contacto" class="btn-gold" style="width:100%; text-align:center; display:block;">Empezar</a>
-            </div>
-        </div>
+  <div class="pricing-inner">
+    <div class="sec-header reveal" style="text-align:center;max-width:580px;margin:0 auto 5rem;">
+      <span class="sec-eyebrow">Inversión</span>
+      <h2 class="sec-title">PLANES CLAROS<br><span class="italic">sin sorpresas</span></h2>
+      <div style="width:50px;height:2px;background:var(--white);margin:1.5rem auto;"></div>
+      <p class="sec-sub" style="max-width:100%">Transparencia total desde el primer momento.</p>
     </div>
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-plan">Básico</div>
+        <div class="price-num"><sup>$</sup>499</div>
+        <div class="price-period">Pago único · Entrega en 7 días</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li class="ok"><i class="fas fa-check"></i> Hasta 5 páginas</li>
+          <li class="ok"><i class="fas fa-check"></i> Diseño responsive</li>
+          <li class="ok"><i class="fas fa-check"></i> Formulario de contacto</li>
+          <li class="ok"><i class="fas fa-check"></i> SEO básico</li>
+          <li class="ok"><i class="fas fa-check"></i> 15 días de soporte</li>
+          <li class="no"><i class="fas fa-times"></i> E-Commerce</li>
+          <li class="no"><i class="fas fa-times"></i> Marketing digital</li>
+        </ul>
+        <a href="#contacto" class="btn-price-w">Empezar</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Más Popular</div>
+        <div class="price-plan">Profesional</div>
+        <div class="price-num"><sup>$</sup>999</div>
+        <div class="price-period">Pago único · Entrega en 14 días</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li class="ok"><i class="fas fa-check"></i> Hasta 10 páginas</li>
+          <li class="ok"><i class="fas fa-check"></i> Diseño UI/UX personalizado</li>
+          <li class="ok"><i class="fas fa-check"></i> Animaciones premium</li>
+          <li class="ok"><i class="fas fa-check"></i> SEO avanzado</li>
+          <li class="ok"><i class="fas fa-check"></i> Integraciones y herramientas</li>
+          <li class="ok"><i class="fas fa-check"></i> 30 días de soporte</li>
+          <li class="no"><i class="fas fa-times"></i> E-Commerce completo</li>
+        </ul>
+        <a href="#contacto" class="btn-price-b">Empezar</a>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">E-Commerce + Marketing</div>
+        <div class="price-num"><sup>$</sup>1,899</div>
+        <div class="price-period">Pago único · Entrega en 21 días</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li class="ok"><i class="fas fa-check"></i> Páginas ilimitadas</li>
+          <li class="ok"><i class="fas fa-check"></i> Tienda online completa</li>
+          <li class="ok"><i class="fas fa-check"></i> Pasarelas de pago</li>
+          <li class="ok"><i class="fas fa-check"></i> Consultoría marketing digital</li>
+          <li class="ok"><i class="fas fa-check"></i> CRM integrado</li>
+          <li class="ok"><i class="fas fa-check"></i> 60 días de soporte</li>
+          <li class="ok"><i class="fas fa-check"></i> Capacitación incluida</li>
+        </ul>
+        <a href="#contacto" class="btn-price-w">Empezar</a>
+      </div>
+    </div>
+  </div>
 </section>
-
 
 <!-- CTA BANNER -->
 <section class="cta-banner">
-    <h2>¿Listo para llevar tu negocio<br>al siguiente nivel <em>digital</em>?</h2>
-    <p>Agenda una consultoría gratuita de 30 minutos. Sin compromisos, con insights reales para tu negocio.</p>
-    <div class="buttons">
-        <a href="#contacto" class="btn-gold-fill">Agendar consultoría gratuita</a>
-        <a href="https://wa.me/qr/6FVSZOIED7H4E1" class="btn-gold" target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px"></i> WhatsApp directo</a>
-    </div>
+  <h2>¿LISTO PARA EL<br>SIGUIENTE NIVEL <span class="italic">digital</span>?</h2>
+  <p>Agenda una consultoría gratuita de 30 minutos. Sin compromiso, con insights reales para tu negocio.</p>
+  <div class="btns">
+    <a href="#contacto" class="btn-black">Agendar consultoría gratis</a>
+    <a href="https://wa.me/qr/6FVSZOIED7H4E1" class="btn-outline-b" target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px"></i> WhatsApp directo</a>
+  </div>
 </section>
 
 <!-- COTIZADOR -->
 <section class="cotizador" id="cotizador">
-    <div class="cotizador-inner">
-        <div class="section-header reveal" style="text-align:center; max-width:650px; margin:0 auto 4rem;">
-            <span class="section-label">Cotizador instantáneo</span>
-            <h2 class="section-title">Conoce el costo de tu<br><em>proyecto ahora mismo</em></h2>
-            <div class="divider" style="margin:1.5rem auto;"></div>
-            <p class="section-sub" style="max-width:100%">Configura tu proyecto ideal y descarga una cotización en PDF lista para compartir o presentar.</p>
-        </div>
-        <div class="cotizador-grid reveal">
-
-            <!-- FORMULARIO IZQUIERDA -->
-            <div class="cotizador-form-panel">
-
-                <div class="cotizador-block">
-                    <div class="cotizador-section-title"><i class="fas fa-layer-group"></i> Tipo de proyecto</div>
-                    <span class="cot-label">Selecciona la categoría principal</span>
-                    <div class="cot-options" id="opt-tipo">
-                        <button class="cot-option" data-group="tipo" data-val="landing" data-price="350" data-label="Landing Page">Landing Page</button>
-                        <button class="cot-option" data-group="tipo" data-val="corporativo" data-price="699" data-label="Sitio Corporativo">Sitio Corporativo</button>
-                        <button class="cot-option" data-group="tipo" data-val="ecommerce" data-price="1299" data-label="Tienda E-Commerce">Tienda E-Commerce</button>
-                        <button class="cot-option" data-group="tipo" data-val="plataforma" data-price="2499" data-label="Plataforma / App Web">Plataforma / App Web</button>
-                    </div>
-                </div>
-
-                <div class="cotizador-block">
-                    <div class="cotizador-section-title"><i class="fas fa-file-alt"></i> Número de páginas</div>
-                    <span class="cot-label">¿Cuántas páginas necesitas? <span class="cot-range-val" id="pages-val">5</span></span>
-                    <div class="cot-range-wrap">
-                        <span style="font-size:0.8rem;color:var(--white-dimmer)">1</span>
-                        <input type="range" class="cot-range" id="pages-range" min="1" max="20" value="5" step="1">
-                        <span style="font-size:0.8rem;color:var(--white-dimmer)">20+</span>
-                    </div>
-                </div>
-
-                <div class="cotizador-block">
-                    <div class="cotizador-section-title"><i class="fas fa-palette"></i> Diseño</div>
-                    <span class="cot-label">Nivel de personalización visual</span>
-                    <div class="cot-options" id="opt-diseno">
-                        <button class="cot-option" data-group="diseno" data-val="plantilla" data-price="0" data-label="Plantilla adaptada">Plantilla adaptada</button>
-                        <button class="cot-option" data-group="diseno" data-val="semipersonalizado" data-price="250" data-label="Semi-personalizado">Semi-personalizado</button>
-                        <button class="cot-option" data-group="diseno" data-val="100custom" data-price="550" data-label="100% a medida">100% a medida</button>
-                    </div>
-                </div>
-
-                <div class="cotizador-block">
-                    <div class="cotizador-section-title"><i class="fas fa-puzzle-piece"></i> Funcionalidades adicionales</div>
-                    <span class="cot-label">Selecciona todo lo que necesites</span>
-                    <div class="cot-options" id="opt-funciones">
-                        <button class="cot-option multi" data-group="func" data-val="seo" data-price="199" data-label="SEO Avanzado">SEO Avanzado</button>
-                        <button class="cot-option multi" data-group="func" data-val="blog" data-price="149" data-label="Blog / CMS">Blog / CMS</button>
-                        <button class="cot-option multi" data-group="func" data-val="multiidioma" data-price="299" data-label="Multi-idioma">Multi-idioma</button>
-                        <button class="cot-option multi" data-group="func" data-val="chat" data-price="99" data-label="Chat en vivo">Chat en vivo</button>
-                        <button class="cot-option multi" data-group="func" data-val="reservas" data-price="249" data-label="Sistema de reservas">Sistema de reservas</button>
-                        <button class="cot-option multi" data-group="func" data-val="crm" data-price="349" data-label="Integración CRM">Integración CRM</button>
-                        <button class="cot-option multi" data-group="func" data-val="pagos" data-price="199" data-label="Pasarela de pagos">Pasarela de pagos</button>
-                        <button class="cot-option multi" data-group="func" data-val="analitica" data-price="99" data-label="Analítica avanzada">Analítica avanzada</button>
-                        <button class="cot-option multi" data-group="func" data-val="animaciones" data-price="199" data-label="Animaciones premium">Animaciones premium</button>
-                        <button class="cot-option multi" data-group="func" data-val="mantenimiento" data-price="89" data-label="Mantenimiento mensual">Mantenimiento mensual</button>
-                    </div>
-                </div>
-
-                <div class="cotizador-block">
-                    <div class="cotizador-section-title"><i class="fas fa-bolt"></i> Tiempo de entrega</div>
-                    <span class="cot-label">¿Cuándo lo necesitas?</span>
-                    <div class="cot-options" id="opt-tiempo">
-                        <button class="cot-option" data-group="tiempo" data-val="urgente" data-price="350" data-label="Urgente (menos de 1 semana)">Urgente &lt;1 semana</button>
-                        <button class="cot-option" data-group="tiempo" data-val="normal" data-price="0" data-label="Normal (2–3 semanas)">Normal 2–3 semanas</button>
-                        <button class="cot-option" data-group="tiempo" data-val="flexible" data-price="-100" data-label="Flexible (+1 mes)">Flexible +1 mes</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- PANEL RESULTADO DERECHA -->
-            <div class="cotizador-result-panel">
-                <div class="result-label">Estimado de inversión</div>
-                <div class="result-total" id="total-price">$0</div>
-                <div class="result-note">Precio orientativo en USD · IVA no incluido</div>
-
-                <div class="result-divider"></div>
-
-                <div id="desglose">
-                    <div class="result-empty">Selecciona las opciones de tu proyecto para ver el desglose.</div>
-                </div>
-
-                <div class="result-divider"></div>
-
-                <div class="client-fields">
-                    <div class="cotizador-section-title" style="font-size:0.85rem; margin-bottom:1rem;"><i class="fas fa-user"></i> Datos para tu cotización PDF</div>
-                    <div class="client-field-group">
-                        <label>Tu nombre *</label>
-                        <input type="text" class="cot-input" id="pdf-nombre" placeholder="Ej: Juan Pérez">
-                    </div>
-                    <div class="client-field-group">
-                        <label>Empresa (opcional)</label>
-                        <input type="text" class="cot-input" id="pdf-empresa" placeholder="Ej: Mi Empresa SAS">
-                    </div>
-                    <div class="client-field-group">
-                        <label>Email *</label>
-                        <input type="email" class="cot-input" id="pdf-email" placeholder="tu@email.com">
-                    </div>
-                </div>
-
-                <button class="btn-download" id="btn-download" disabled>
-                    <i class="fas fa-file-pdf"></i> Descargar Cotización PDF
-                </button>
-                <p style="font-size:0.75rem;color:var(--white-dimmer);text-align:center;margin-top:0.8rem;">
-                    Esta cotización es orientativa. El precio final se confirma tras la consultoría.
-                </p>
-            </div>
-
-        </div>
+  <div class="cotizador-inner">
+    <div class="sec-header reveal" style="text-align:center;max-width:650px;margin:0 auto 5rem;">
+      <span class="sec-eyebrow">Cotizador instantáneo</span>
+      <h2 class="sec-title">CONOCE EL COSTO<br>DE TU <span class="italic">proyecto</span></h2>
+      <div style="width:50px;height:2px;background:var(--white);margin:1.5rem auto;"></div>
+      <p class="sec-sub" style="max-width:100%">Configura tu proyecto y descarga una cotización en PDF lista para presentar.</p>
     </div>
+    <div class="cot-grid reveal">
+      <div class="cot-panel">
+        <div class="cot-block">
+          <div class="cot-section-ttl"><i class="fas fa-layer-group"></i> Tipo de proyecto</div>
+          <span class="cot-label">Selecciona la categoría principal</span>
+          <div class="cot-opts" id="opt-tipo">
+            <button class="cot-opt" data-group="tipo" data-val="landing" data-price="350" data-label="Landing Page">Landing Page</button>
+            <button class="cot-opt" data-group="tipo" data-val="corporativo" data-price="699" data-label="Sitio Corporativo">Sitio Corporativo</button>
+            <button class="cot-opt" data-group="tipo" data-val="ecommerce" data-price="1299" data-label="Tienda E-Commerce">Tienda E-Commerce</button>
+            <button class="cot-opt" data-group="tipo" data-val="plataforma" data-price="2499" data-label="Plataforma / App Web">Plataforma / App Web</button>
+            <button class="cot-opt" data-group="tipo" data-val="marketing" data-price="499" data-label="Consultoría Marketing Digital">Consultoría Marketing</button>
+          </div>
+        </div>
+        <div class="cot-block">
+          <div class="cot-section-ttl"><i class="fas fa-file-alt"></i> Número de páginas</div>
+          <span class="cot-label">¿Cuántas páginas necesitas? <span id="pages-val">5</span></span>
+          <div class="cot-range-wrap">
+            <span style="font-size:.75rem;color:var(--white-4)">1</span>
+            <input type="range" class="cot-range" id="pages-range" min="1" max="20" value="5" step="1">
+            <span style="font-size:.75rem;color:var(--white-4)">20+</span>
+          </div>
+        </div>
+        <div class="cot-block">
+          <div class="cot-section-ttl"><i class="fas fa-palette"></i> Diseño</div>
+          <span class="cot-label">Nivel de personalización visual</span>
+          <div class="cot-opts" id="opt-diseno">
+            <button class="cot-opt" data-group="diseno" data-val="plantilla" data-price="0" data-label="Plantilla adaptada">Plantilla adaptada</button>
+            <button class="cot-opt" data-group="diseno" data-val="semi" data-price="250" data-label="Semi-personalizado">Semi-personalizado</button>
+            <button class="cot-opt" data-group="diseno" data-val="custom" data-price="550" data-label="100% a medida">100% a medida</button>
+          </div>
+        </div>
+        <div class="cot-block">
+          <div class="cot-section-ttl"><i class="fas fa-puzzle-piece"></i> Funcionalidades adicionales</div>
+          <span class="cot-label">Selecciona todo lo que necesites</span>
+          <div class="cot-opts" id="opt-funciones">
+            <button class="cot-opt multi" data-group="func" data-val="seo" data-price="199" data-label="SEO Avanzado">SEO Avanzado</button>
+            <button class="cot-opt multi" data-group="func" data-val="blog" data-price="149" data-label="Blog / CMS">Blog / CMS</button>
+            <button class="cot-opt multi" data-group="func" data-val="multiidioma" data-price="299" data-label="Multi-idioma">Multi-idioma</button>
+            <button class="cot-opt multi" data-group="func" data-val="chat" data-price="99" data-label="Chat en vivo">Chat en vivo</button>
+            <button class="cot-opt multi" data-group="func" data-val="reservas" data-price="249" data-label="Sistema de reservas">Sistema de reservas</button>
+            <button class="cot-opt multi" data-group="func" data-val="crm" data-price="349" data-label="Integración CRM">Integración CRM</button>
+            <button class="cot-opt multi" data-group="func" data-val="pagos" data-price="199" data-label="Pasarela de pagos">Pasarela de pagos</button>
+            <button class="cot-opt multi" data-group="func" data-val="analitica" data-price="99" data-label="Analítica avanzada">Analítica avanzada</button>
+            <button class="cot-opt multi" data-group="func" data-val="animaciones" data-price="199" data-label="Animaciones premium">Animaciones premium</button>
+            <button class="cot-opt multi" data-group="func" data-val="mkt" data-price="299" data-label="Gestión Redes Sociales">Gestión RRSS</button>
+            <button class="cot-opt multi" data-group="func" data-val="ads" data-price="399" data-label="Campañas Paid Media">Paid Media (Ads)</button>
+            <button class="cot-opt multi" data-group="func" data-val="mant" data-price="89" data-label="Mantenimiento mensual">Mantenimiento</button>
+          </div>
+        </div>
+        <div class="cot-block">
+          <div class="cot-section-ttl"><i class="fas fa-bolt"></i> Tiempo de entrega</div>
+          <span class="cot-label">¿Cuándo lo necesitas?</span>
+          <div class="cot-opts" id="opt-tiempo">
+            <button class="cot-opt" data-group="tiempo" data-val="urgente" data-price="350" data-label="Urgente (menos de 1 semana)">Urgente &lt;1 semana</button>
+            <button class="cot-opt" data-group="tiempo" data-val="normal" data-price="0" data-label="Normal (2–3 semanas)">Normal 2–3 sem.</button>
+            <button class="cot-opt" data-group="tiempo" data-val="flexible" data-price="-100" data-label="Flexible (más de 1 mes)">Flexible +1 mes</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cot-result">
+        <div class="res-label">Estimado de inversión</div>
+        <div class="res-total" id="total-price">$0</div>
+        <div class="res-note">Precio orientativo en USD · IVA no incluido</div>
+        <div class="res-divider"></div>
+        <div id="desglose"><div class="res-empty">Selecciona las opciones para ver el desglose.</div></div>
+        <div class="res-divider"></div>
+        <div class="cot-section-ttl" style="font-size:.8rem;color:var(--black-3);border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:1rem;"><i class="fas fa-user"></i> Datos para tu PDF</div>
+        <div class="client-fields">
+          <div class="cfield">
+            <label>Tu nombre *</label>
+            <input type="text" class="cot-input-b" id="pdf-nombre" placeholder="Ej: Juan Pérez">
+          </div>
+          <div class="cfield">
+            <label>Empresa (opcional)</label>
+            <input type="text" class="cot-input-b" id="pdf-empresa" placeholder="Ej: Mi Empresa">
+          </div>
+          <div class="cfield">
+            <label>Email *</label>
+            <input type="email" class="cot-input-b" id="pdf-email" placeholder="tu@email.com">
+          </div>
+        </div>
+        <button class="btn-dl" id="btn-download" disabled>
+          <i class="fas fa-file-pdf"></i> Descargar Cotización PDF
+        </button>
+        <p style="font-size:.72rem;color:var(--white-4);text-align:center;margin-top:.7rem;">Precio orientativo. Se confirma tras consultoría.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonials" id="testimonios">
+  <div class="testimonials-inner">
+    <div class="sec-header reveal">
+      <span class="sec-eyebrow">Clientes</span>
+      <h2 class="sec-title">LO QUE DICEN<br><span class="italic">los que ya</span> CONFIARON</h2>
+    </div>
+    <div class="test-grid reveal">
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"Teníamos un sitio anticuado que no generaba leads. Ahora recibimos consultas diarias y el ROI fue evidente en el primer mes."</p>
+        <div class="test-author">
+          <img src="https://i.pravatar.cc/80?img=11" alt="Cliente" class="test-avatar">
+          <div>
+            <div class="test-name">Carlos Mendoza</div>
+            <div class="test-role">CEO, Grupo Mendoza</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"No solo hizo la web — me explicó la estrategia de marketing completa. Mis ventas online subieron un 200% en dos meses."</p>
+        <div class="test-author">
+          <img src="https://i.pravatar.cc/80?img=23" alt="Cliente" class="test-avatar">
+          <div>
+            <div class="test-name">Valeria Torres</div>
+            <div class="test-role">Fundadora, Vela Beauty</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"Entrega puntual, comunicación clara y el resultado superó todas mis expectativas. Contrataré para los próximos dos proyectos."</p>
+        <div class="test-author">
+          <img src="https://i.pravatar.cc/80?img=32" alt="Cliente" class="test-avatar">
+          <div>
+            <div class="test-name">Rodrigo Espinosa</div>
+            <div class="test-role">Director Creativo, Studio 9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FAQ -->
 <section class="faq" id="faq">
-    <div class="faq-inner">
-        <div class="section-header reveal" style="text-align:center; max-width:580px; margin:0 auto 4rem;">
-            <span class="section-label">Preguntas frecuentes</span>
-            <h2 class="section-title">Resuelvo tus<br><em>dudas</em></h2>
-            <div class="divider" style="margin:1.5rem auto;"></div>
-        </div>
-        <div class="reveal">
-            <div class="faq-item">
-                <div class="faq-question">¿Cuánto tiempo demora en estar listo mi sitio? <i class="fas fa-plus faq-icon"></i></div>
-                <div class="faq-answer"><p>Depende del plan: Básico 7 días, Profesional 14 días, E-Commerce 21 días. Proyectos personalizados tienen cronograma detallado desde el inicio.</p></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">¿Necesito saber de tecnología para trabajar contigo? <i class="fas fa-plus faq-icon"></i></div>
-                <div class="faq-answer"><p>No, para nada. Me encargo de toda la parte técnica. Te explico todo en lenguaje simple y te capacito para que puedas gestionar tu sitio sin depender de nadie.</p></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">¿Qué incluye el soporte post-lanzamiento? <i class="fas fa-plus faq-icon"></i></div>
-                <div class="faq-answer"><p>Corrección de bugs, ajustes menores de contenido, dudas técnicas y monitoreo de funcionamiento. Todo dentro del período de soporte de tu plan.</p></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">¿Puedo hacer cambios en el diseño durante el proceso? <i class="fas fa-plus faq-icon"></i></div>
-                <div class="faq-answer"><p>Sí. Cada proyecto incluye hasta 2 rondas de revisiones de diseño antes del desarrollo. Esto asegura que el resultado final sea exactamente lo que necesitas.</p></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">¿Trabajas con clientes fuera de Ecuador? <i class="fas fa-plus faq-icon"></i></div>
-                <div class="faq-answer"><p>Absolutamente. Trabajo de forma 100% remota con clientes en toda Latinoamérica, España y Estados Unidos. La diferencia horaria no es un problema.</p></div>
-            </div>
-        </div>
+  <div class="faq-inner">
+    <div class="sec-header reveal" style="text-align:center;max-width:550px;margin:0 auto 5rem;">
+      <span class="sec-eyebrow">Preguntas frecuentes</span>
+      <h2 class="sec-title">RESUELVO<br>TUS <span class="italic">dudas</span></h2>
     </div>
+    <div class="reveal">
+      <div class="faq-item">
+        <div class="faq-q">¿Cuánto tiempo demora en estar listo mi sitio? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Depende del plan: Básico 7 días, Profesional 14 días, E-Commerce 21 días. Proyectos personalizados tienen cronograma detallado desde el inicio.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Qué incluye la consultoría de marketing digital? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Análisis de tu negocio, auditoría de presencia digital actual, estrategia de redes sociales, plan de contenidos, recomendaciones de paid media (Google Ads / Meta Ads) y KPIs claros para medir el éxito.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Necesito saber de tecnología para trabajar contigo? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Para nada. Me encargo de toda la parte técnica. Te explico todo en lenguaje simple y te capacito para que puedas gestionar tu sitio de forma autónoma.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Puedo hacer cambios en el diseño durante el proceso? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Sí. Cada proyecto incluye hasta 2 rondas de revisiones de diseño antes del desarrollo. Esto asegura que el resultado final sea exactamente lo que necesitas.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Trabajas con clientes fuera de Ecuador? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Absolutamente. Trabajo 100% remoto con clientes en toda Latinoamérica, España y Estados Unidos. La diferencia horaria no es un problema.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">¿Cuánto cuesta una consultoría de marketing digital? <i class="fas fa-plus faq-icon"></i></div>
+        <div class="faq-a"><p>Depende del alcance: desde $299 para una auditoría y plan de acción, hasta planes mensuales completos de gestión desde $499/mes. Agenda una llamada y lo vemos juntos.</p></div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- CONTACTO / CALENDLY -->
+<!-- CONTACTO -->
 <section class="contact" id="contacto">
-    <div class="contact-inner">
-        <div class="reveal">
-            <span class="section-label">Hablemos</span>
-            <h2 class="section-title">Agenda tu<br><em>consultoría gratis</em></h2>
-            <div class="divider"></div>
-            <p style="color:var(--white-dim); font-size:0.95rem; line-height:1.8; margin-bottom:3rem;">30 minutos donde analizamos tu negocio, tu competencia y definimos exactamente qué necesita tu sitio web para generar resultados.</p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <div class="contact-icon-box"><i class="fas fa-envelope"></i></div>
-                    <div>
-                        <h4>Email</h4>
-                        <p>dilancoronado358@gmail.com</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon-box"><i class="fab fa-whatsapp"></i></div>
-                    <div>
-                        <h4>WhatsApp</h4>
-                        <p>+593 96 993 0639</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon-box"><i class="fas fa-clock"></i></div>
-                    <div>
-                        <h4>Disponibilidad</h4>
-                        <p>Lun – Vie: 9:00 – 18:00 (GMT-5)</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon-box"><i class="fas fa-globe"></i></div>
-                    <div>
-                        <h4>Modalidad</h4>
-                        <p>Trabajo remoto · Clientes internacionales</p>
-                    </div>
-                </div>
-            </div>
+  <div class="contact-inner">
+    <div class="reveal">
+      <span class="sec-eyebrow">Hablemos</span>
+      <h2 class="sec-title" style="font-size:clamp(2.5rem,4vw,4rem)">AGENDA TU<br><span class="italic">consultoría</span><br>GRATIS</h2>
+      <div style="width:50px;height:2px;background:var(--white);margin:1.5rem 0 2rem;"></div>
+      <p style="color:var(--white-3);font-size:.93rem;line-height:1.8;margin-bottom:3rem;max-width:380px;">30 minutos donde analizamos tu negocio y definimos exactamente qué necesita tu presencia digital para crecer.</p>
+      <div class="c-info">
+        <div class="c-item">
+          <div class="c-icon"><i class="fas fa-envelope"></i></div>
+          <div><h4>Email</h4><p>dilancoronado358@gmail.com</p></div>
         </div>
-        <div class="reveal">
-            <div class="calendly-wrapper">
-                <div class="calendly-header">
-                    <div class="calendly-dot green"></div>
-                    <span style="font-size:0.82rem; color:var(--white-dim);">Calendario en tiempo real</span>
-                    <span class="calendly-header-text">Consultoría Gratuita · 30 min</span>
-                </div>
-                <!-- Calendly Widget -->
-                <div class="calendly-inline-widget" data-url="https://calendly.com/dilancoronado358/30min?primary_color=c9a84c&hide_gdpr_banner=1" style="min-width:320px;height:700px;"></div>
-                <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-            </div>
+        <div class="c-item">
+          <div class="c-icon"><i class="fab fa-whatsapp"></i></div>
+          <div><h4>WhatsApp</h4><p>+593 96 993 0639</p></div>
         </div>
+        <div class="c-item">
+          <div class="c-icon"><i class="fas fa-clock"></i></div>
+          <div><h4>Disponibilidad</h4><p>Lun – Vie: 9:00 – 18:00 (GMT-5)</p></div>
+        </div>
+        <div class="c-item">
+          <div class="c-icon"><i class="fas fa-globe"></i></div>
+          <div><h4>Modalidad</h4><p>Trabajo remoto · Clientes internacionales</p></div>
+        </div>
+      </div>
     </div>
+    <div class="reveal">
+      <div class="calendly-wrapper">
+        <div class="calendly-header">
+          <div class="cal-dot"></div>
+          <span style="font-size:.78rem;color:var(--white-3);">Calendario en tiempo real</span>
+          <span class="calendly-header-txt">Consultoría Gratuita · 30 min</span>
+        </div>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/dilancoronado358/30min?primary_color=000000&hide_gdpr_banner=1" style="min-width:320px;height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-    <div class="footer-top">
-        <div class="footer-brand">
-            <a href="#inicio" class="logo">
-                <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite">
-            </a>
-            <p>Desarrollo web premium para marcas que quieren destacar y convertir visitas en clientes reales.</p>
-            <div class="footer-socials">
-                <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="footer-social"><i class="fab fa-dribbble"></i></a>
-                <a href="https://wa.me/qr/6FVSZOIED7H4E1" class="footer-social" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h5>Navegar</h5>
-            <ul>
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#servicios">Servicios</a></li>
-                <li><a href="#portafolio">Portafolio</a></li>
-                <li><a href="#proceso">Proceso</a></li>
-                <li><a href="#precios">Precios</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h5>Servicios</h5>
-            <ul>
-                <li><a href="#servicios">Desarrollo Web</a></li>
-                <li><a href="#servicios">E-Commerce</a></li>
-                <li><a href="#servicios">Diseño UI/UX</a></li>
-                <li><a href="#servicios">Optimización SEO</a></li>
-                <li><a href="#servicios">Mantenimiento</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h5>Contacto</h5>
-            <ul>
-                <li><a href="mailto:dilancoronado358@gmail.com">dilancoronado358@gmail.com</a></li>
-                <li><a href="https://wa.me/593969930639">+593 96 993 0639</a></li>
-                <li><a href="#contacto">Agendar llamada</a></li>
-                <li><a href="#faq">Preguntas frecuentes</a></li>
-            </ul>
-        </div>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1772573448/IGNITE_WHITE_koaqvh.png" alt="Ignite" class="logo-img">
+      <p>Desarrollo web, e-commerce y marketing digital premium para marcas que quieren liderar su mercado.</p>
+      <div class="footer-socials">
+        <a href="#" class="f-social"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="f-social"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="f-social"><i class="fab fa-dribbble"></i></a>
+        <a href="https://wa.me/qr/6FVSZOIED7H4E1" class="f-social" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
     </div>
-    <div class="footer-bottom">
-        <span>© 2025 Ignite · Todos los derechos reservados</span>
-        <span>Diseñado para convertir · Construido para durar</span>
+    <div class="footer-col">
+      <h5>Navegar</h5>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#portafolio">Portafolio</a></li>
+        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#precios">Precios</a></li>
+      </ul>
     </div>
+    <div class="footer-col">
+      <h5>Servicios</h5>
+      <ul>
+        <li><a href="#servicios">Desarrollo Web</a></li>
+        <li><a href="#servicios">E-Commerce</a></li>
+        <li><a href="#servicios">Diseño UI/UX</a></li>
+        <li><a href="#servicios">SEO</a></li>
+        <li><a href="#servicios">Marketing Digital</a></li>
+        <li><a href="#servicios">Redes Sociales</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contacto</h5>
+      <ul>
+        <li><a href="mailto:dilancoronado358@gmail.com">dilancoronado358@gmail.com</a></li>
+        <li><a href="https://wa.me/593969930639">+593 96 993 0639</a></li>
+        <li><a href="#contacto">Agendar llamada</a></li>
+        <li><a href="#faq">Preguntas frecuentes</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Ignite · Todos los derechos reservados</span>
+    <span>Diseñado para convertir · Construido para durar</span>
+  </div>
 </footer>
 
-<!-- WhatsApp Flotante -->
-<a href="https://wa.me/593969930639?text=Hola%2C%20necesito%20m%C3%A1s%20informaci%C3%B3n" class="whatsapp-float" target="_blank" title="Escríbeme por WhatsApp">
-    <i class="fab fa-whatsapp"></i>
+<a href="https://wa.me/593969930639?text=Hola%2C%20necesito%20m%C3%A1s%20informaci%C3%B3n" class="wa-float" target="_blank">
+  <i class="fab fa-whatsapp"></i>
 </a>
 
 <script>
-    // Cursor personalizado
-    const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
-    document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        setTimeout(() => {
-            follower.style.left = e.clientX + 'px';
-            follower.style.top = e.clientY + 'px';
-        }, 80);
-    });
+// CURSOR
+const cur = document.querySelector('.cur');
+const ring = document.querySelector('.cur-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  setTimeout(() => { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px'; }, 80);
+});
 
-    // Urgency bar offset para header
-    const urgencyBar = document.querySelector('.urgency-bar');
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-        const barH = urgencyBar.offsetHeight;
-        if (window.scrollY > barH) {
-            header.classList.add('scrolled');
-            header.style.top = '0';
-        } else {
-            header.classList.remove('scrolled');
-            header.style.top = barH + 'px';
-        }
-    });
-    // Init header top
-    header.style.top = urgencyBar.offsetHeight + 'px';
+// POPUP — show after 2s
+setTimeout(() => document.getElementById('popupOverlay').classList.add('show'), 2000);
+function closePopup() { document.getElementById('popupOverlay').classList.remove('show'); }
+document.getElementById('popupClose').addEventListener('click', closePopup);
+document.getElementById('popupOverlay').addEventListener('click', e => { if(e.target===document.getElementById('popupOverlay')) closePopup(); });
+document.getElementById('popupDismiss').addEventListener('click', e => { e.preventDefault(); closePopup(); document.querySelector('#servicios').scrollIntoView({behavior:'smooth'}); });
+document.getElementById('popupCTA').addEventListener('click', e => { e.preventDefault(); closePopup(); document.querySelector('#contacto').scrollIntoView({behavior:'smooth'}); });
 
-    // Mobile menu
-    document.getElementById('mobileMenu').addEventListener('click', () => {
-        document.getElementById('navLinks').classList.toggle('open');
-    });
+// HEADER SCROLL
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+  // swap logo on scroll for better visibility
+});
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', e => {
-            const target = document.querySelector(a.getAttribute('href'));
-            if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
-        });
-    });
+// MOBILE MENU
+document.getElementById('mobileMenu').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
 
-    // Reveal on scroll
-    const reveals = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
-            if (entry.isIntersecting) {
-                entry.target.style.transitionDelay = (i % 3) * 0.1 + 's';
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => revealObserver.observe(el));
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+  });
+});
 
-    // Contador animado
-    const counters = document.querySelectorAll('.stat-num[data-target]');
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const target = +el.dataset.target;
-                let current = 0;
-                const step = target / 60;
-                const timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) { el.textContent = target + (target === 98 ? '%' : '+'); clearInterval(timer); }
-                    else el.textContent = Math.floor(current) + (target === 98 ? '%' : '+');
-                }, 20);
-                counterObserver.unobserve(el);
-            }
-        });
-    }, { threshold: 0.5 });
-    counters.forEach(el => counterObserver.observe(el));
-
-    // ── COTIZADOR LOGIC ──
-    const state = {
-        tipo: null,
-        diseno: null,
-        tiempo: null,
-        funciones: new Set(),
-        pages: 5
-    };
-
-    function getPagePrice(pages) {
-        if (pages <= 5) return 0;
-        if (pages <= 10) return (pages - 5) * 40;
-        return (5 * 40) + (pages - 10) * 70;
+// REVEAL
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach((en,i) => {
+    if(en.isIntersecting) {
+      en.target.style.transitionDelay = (i%4)*0.08+'s';
+      en.target.classList.add('visible');
     }
+  });
+}, {threshold:.08});
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
-    function calcTotal() {
-        let total = 0;
-        if (state.tipo) total += state.tipo.price;
-        if (state.diseno) total += state.diseno.price;
-        if (state.tiempo) total += state.tiempo.price;
-        state.funciones.forEach(f => total += f.price);
-        total += getPagePrice(state.pages);
-        return Math.max(total, 0);
+// COUNTER
+const cntObs = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(en.isIntersecting) {
+      const el = en.target;
+      const tgt = +el.dataset.target;
+      let cur = 0; const step = tgt/60;
+      const t = setInterval(() => {
+        cur += step;
+        if(cur >= tgt) { el.textContent = tgt + (tgt===98?'%':'+'); clearInterval(t); }
+        else el.textContent = Math.floor(cur) + (tgt===98?'%':'+');
+      }, 18);
+      cntObs.unobserve(el);
     }
+  });
+}, {threshold:.5});
+document.querySelectorAll('.hero-stat-num[data-target]').forEach(el => cntObs.observe(el));
 
-    function formatMoney(n) {
-        return '$' + n.toLocaleString('en-US');
+// FAQ
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  });
+});
+
+// COTIZADOR
+const state = { tipo: null, diseno: null, tiempo: null, funciones: new Set(), pages: 5 };
+
+function pageExtra(p) {
+  if(p<=5) return 0;
+  if(p<=10) return (p-5)*40;
+  return 200+(p-10)*70;
+}
+function calc() {
+  let t = 0;
+  if(state.tipo) t += state.tipo.price;
+  if(state.diseno) t += state.diseno.price;
+  if(state.tiempo) t += state.tiempo.price;
+  state.funciones.forEach(f => t += f.price);
+  t += pageExtra(state.pages);
+  return Math.max(t,0);
+}
+function fmt(n) { return '$'+n.toLocaleString('en-US'); }
+
+function renderDesglose() {
+  const el = document.getElementById('desglose');
+  const items = [];
+  if(state.tipo) items.push({l:state.tipo.label,v:fmt(state.tipo.price)});
+  if(state.diseno&&state.diseno.price>0) items.push({l:state.diseno.label,v:'+'+fmt(state.diseno.price)});
+  const pe = pageExtra(state.pages);
+  if(pe>0) items.push({l:`Páginas adicionales (${state.pages})`,v:'+'+fmt(pe)});
+  state.funciones.forEach(f => items.push({l:f.label,v:'+'+fmt(f.price)}));
+  if(state.tiempo&&state.tiempo.price!==0) items.push({l:state.tiempo.label,v:(state.tiempo.price>0?'+':'')+fmt(state.tiempo.price)});
+  if(!items.length) { el.innerHTML='<div class="res-empty">Selecciona las opciones para ver el desglose.</div>'; return; }
+  el.innerHTML = items.map(i=>`<div class="res-line"><span class="res-line-label">${i.l}</span><span class="res-line-val">${i.v}</span></div>`).join('') +
+    `<div class="res-divider"></div><div class="res-line"><span class="res-line-label" style="font-weight:700">TOTAL</span><span class="res-line-val" style="font-weight:700">${fmt(calc())}</span></div>`;
+}
+
+function updateTotal() {
+  document.getElementById('total-price').textContent = fmt(calc());
+  renderDesglose();
+  const n = document.getElementById('pdf-nombre').value.trim();
+  const e = document.getElementById('pdf-email').value.trim();
+  document.getElementById('btn-download').disabled = !(state.tipo && n && e);
+}
+
+document.querySelectorAll('.cot-opt:not(.multi)').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll(`.cot-opt[data-group="${btn.dataset.group}"]`).forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    state[btn.dataset.group] = {val:btn.dataset.val, price:+btn.dataset.price, label:btn.dataset.label};
+    updateTotal();
+  });
+});
+
+document.querySelectorAll('.cot-opt.multi').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('sel');
+    const k = btn.dataset.val;
+    if(btn.classList.contains('sel')) {
+      state.funciones.add({val:k, price:+btn.dataset.price, label:btn.dataset.label});
+    } else {
+      state.funciones.forEach(f => { if(f.val===k) state.funciones.delete(f); });
     }
+    updateTotal();
+  });
+});
 
-    function renderDesglose() {
-        const desglose = document.getElementById('desglose');
-        const items = [];
+document.getElementById('pages-range').addEventListener('input', function() {
+  state.pages = +this.value;
+  document.getElementById('pages-val').textContent = this.value;
+  updateTotal();
+});
 
-        if (state.tipo) items.push({ label: state.tipo.label, val: formatMoney(state.tipo.price) });
-        if (state.diseno && state.diseno.price > 0) items.push({ label: state.diseno.label, val: '+' + formatMoney(state.diseno.price) });
+['pdf-nombre','pdf-email'].forEach(id => document.getElementById(id).addEventListener('input', updateTotal));
 
-        const pageExtra = getPagePrice(state.pages);
-        if (pageExtra > 0) items.push({ label: `Páginas adicionales (${state.pages})`, val: '+' + formatMoney(pageExtra) });
+// PDF GENERATION
+document.getElementById('btn-download').addEventListener('click', () => {
+  const nombre = document.getElementById('pdf-nombre').value.trim();
+  const empresa = document.getElementById('pdf-empresa').value.trim();
+  const email = document.getElementById('pdf-email').value.trim();
+  const total = calc();
+  const fecha = new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long',day:'numeric'});
+  const folio = 'IG-'+Date.now().toString().slice(-6);
+  const items = [];
+  if(state.tipo) items.push({desc:state.tipo.label,cat:'Tipo de proyecto',price:state.tipo.price});
+  if(state.diseno&&state.diseno.price>0) items.push({desc:state.diseno.label,cat:'Diseño',price:state.diseno.price});
+  const pe = pageExtra(state.pages);
+  if(pe>0) items.push({desc:`${state.pages} páginas`,cat:'Páginas',price:pe});
+  state.funciones.forEach(f=>items.push({desc:f.label,cat:'Funcionalidad',price:f.price}));
+  if(state.tiempo&&state.tiempo.price!==0) items.push({desc:state.tiempo.label,cat:'Tiempo de entrega',price:state.tiempo.price});
 
-        state.funciones.forEach(f => {
-            items.push({ label: f.label, val: '+' + formatMoney(f.price) });
-        });
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,H=297;
+  // bg
+  doc.setFillColor(10,10,10); doc.rect(0,0,W,H,'F');
+  // sidebar
+  doc.setFillColor(245,242,237); doc.rect(0,0,5,H,'F');
+  // header block
+  doc.setFillColor(17,17,17); doc.rect(5,0,W-5,50,'F');
+  doc.setDrawColor(255,255,255); doc.setLineWidth(0.2); doc.line(5,50,W,50);
+  // logo text
+  doc.setFont('helvetica','bold'); doc.setFontSize(28); doc.setTextColor(245,242,237);
+  doc.text('IGNITE',14,22);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(100,100,100);
+  doc.text('AGENCIA DIGITAL PREMIUM',14,28);
+  // folio
+  doc.setFillColor(245,242,237); doc.rect(W-52,8,46,13,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(10,10,10);
+  doc.text('COT. '+folio,W-50,17);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(100,100,100);
+  doc.text(fecha,W-52,25);
+  // title
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(245,242,237);
+  doc.text('PROPUESTA DE SERVICIOS DIGITALES',14,40);
+  // client box
+  doc.setFillColor(24,24,24); doc.rect(5,56,(W-10)*0.55,32,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(180,180,180);
+  doc.text('PREPARADO PARA',11,64);
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(245,242,237);
+  doc.text(nombre,11,72);
+  if(empresa){doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(150,150,150);doc.text(empresa,11,79);}
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(100,100,100);doc.text(email,11,empresa?86:79);
+  // total box
+  const tbX=5+(W-10)*0.58,tbW=(W-10)*0.42;
+  doc.setFillColor(245,242,237); doc.rect(tbX,56,tbW,32,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(80,80,80);doc.text('TOTAL ESTIMADO',tbX+5,63);
+  doc.setFont('helvetica','bold');doc.setFontSize(22);doc.setTextColor(10,10,10);doc.text(fmt(total),tbX+5,75);
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(100,100,100);doc.text('USD · IVA no incluido',tbX+5,82);
+  doc.text('Válida por 15 días',tbX+5,87);
+  // table header
+  let y=98;
+  doc.setFillColor(24,24,24);doc.rect(5,y,W-10,9,'F');
+  doc.setDrawColor(245,242,237);doc.setLineWidth(0.3);doc.line(5,y,W-5,y);doc.line(5,y+9,W-5,y+9);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(245,242,237);
+  doc.text('DESCRIPCIÓN',11,y+6);doc.text('CATEGORÍA',100,y+6);doc.text('VALOR USD',W-11,y+6,{align:'right'});
+  y+=9;
+  items.forEach((item,i)=>{
+    doc.setFillColor(i%2===0?20:26,i%2===0?20:26,i%2===0?20:26);
+    doc.rect(5,y,W-10,9,'F');
+    doc.setDrawColor(35,35,35);doc.setLineWidth(0.1);doc.line(5,y+9,W-5,y+9);
+    doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(245,242,237);doc.text(item.desc,11,y+6.2);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text(item.cat,100,y+6.2);
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(245,242,237);doc.text(fmt(item.price),W-11,y+6.2,{align:'right'});
+    y+=9;
+  });
+  y+=2;
+  doc.setFillColor(245,242,237);doc.rect(5,y,W-10,11,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(10,10,10);
+  doc.text('TOTAL ESTIMADO',11,y+7.5);doc.text(fmt(total)+' USD',W-11,y+7.5,{align:'right'});
+  y+=18;
+  doc.setFillColor(17,17,17);doc.rect(5,y,W-10,50,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(200,200,200);doc.text('CONDICIONES',11,y+8);
+  const conds=['→  Cotización orientativa, sujeta a confirmación tras consultoría gratuita.','→  Precio final puede variar según el alcance detallado del proyecto.','→  Pago: 50% al inicio, 50% al entregar el resultado final.','→  30 días de soporte técnico gratuito post-lanzamiento.','→  Válida por 15 días calendario desde la fecha de emisión.'];
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(150,150,150);
+  conds.forEach((c,i)=>doc.text(c,11,y+16+(i*7)));
+  y+=54;
+  doc.setFillColor(24,24,24);doc.rect(5,y,W-10,20,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(245,242,237);
+  doc.text('¿Listo para empezar? Agenda tu consultoría gratuita:',11,y+9);
+  doc.setTextColor(200,200,200);doc.setFontSize(8.5);
+  doc.text('dilancoronado358@gmail.com  ·  +593 96 993 0639',11,y+16);
+  // footer
+  doc.setFillColor(17,17,17);doc.rect(5,H-14,W-5,14,'F');
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(80,80,80);
+  doc.text('Ignite · Agencia Digital Premium · '+new Date().getFullYear(),W/2,H-6,{align:'center'});
+  doc.setTextColor(150,150,150);doc.text(folio,W-11,H-6,{align:'right'});
 
-        if (state.tiempo && state.tiempo.price !== 0) {
-            const sign = state.tiempo.price > 0 ? '+' : '';
-            items.push({ label: state.tiempo.label, val: sign + formatMoney(state.tiempo.price) });
-        }
-
-        if (items.length === 0) {
-            desglose.innerHTML = '<div class="result-empty">Selecciona las opciones de tu proyecto para ver el desglose.</div>';
-            return;
-        }
-
-        desglose.innerHTML = items.map(i => `
-            <div class="result-line">
-                <span class="result-line-label">${i.label}</span>
-                <span class="result-line-val gold">${i.val}</span>
-            </div>
-        `).join('') + `
-            <div class="result-divider"></div>
-            <div class="result-line" style="margin-bottom:0">
-                <span class="result-line-label" style="font-weight:600;color:var(--white)">TOTAL ESTIMADO</span>
-                <span class="result-line-val gold" style="font-size:1rem;font-weight:700">${formatMoney(calcTotal())}</span>
-            </div>
-        `;
-    }
-
-    function updateTotal() {
-        const total = calcTotal();
-        document.getElementById('total-price').textContent = formatMoney(total);
-        renderDesglose();
-
-        const nombre = document.getElementById('pdf-nombre').value.trim();
-        const email = document.getElementById('pdf-email').value.trim();
-        const hasSelection = state.tipo !== null;
-        document.getElementById('btn-download').disabled = !(hasSelection && nombre && email);
-    }
-
-    // Single-select buttons
-    document.querySelectorAll('.cot-option:not(.multi)').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const group = btn.dataset.group;
-            document.querySelectorAll(`.cot-option[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            state[group] = { val: btn.dataset.val, price: parseInt(btn.dataset.price), label: btn.dataset.label };
-            updateTotal();
-        });
-    });
-
-    // Multi-select buttons
-    document.querySelectorAll('.cot-option.multi').forEach(btn => {
-        btn.addEventListener('click', () => {
-            btn.classList.toggle('selected');
-            const key = btn.dataset.val;
-            if (btn.classList.contains('selected')) {
-                state.funciones.add({ val: key, price: parseInt(btn.dataset.price), label: btn.dataset.label });
-            } else {
-                state.funciones.forEach(f => { if (f.val === key) state.funciones.delete(f); });
-            }
-            updateTotal();
-        });
-    });
-
-    // Pages range
-    const pagesRange = document.getElementById('pages-range');
-    pagesRange.addEventListener('input', () => {
-        state.pages = parseInt(pagesRange.value);
-        document.getElementById('pages-val').textContent = state.pages;
-        updateTotal();
-    });
-
-    // Client fields update button state
-    ['pdf-nombre','pdf-email'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updateTotal);
-    });
-
-    // ── PDF GENERATION ──
-    document.getElementById('btn-download').addEventListener('click', generatePDF);
-
-    function generatePDF() {
-        const nombre = document.getElementById('pdf-nombre').value.trim();
-        const empresa = document.getElementById('pdf-empresa').value.trim();
-        const email = document.getElementById('pdf-email').value.trim();
-        const total = calcTotal();
-        const fecha = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-        const folio = 'IG-' + Date.now().toString().slice(-6);
-
-        // Build items array
-        const items = [];
-        if (state.tipo) items.push({ desc: state.tipo.label, cat: 'Tipo de proyecto', price: state.tipo.price });
-        if (state.diseno && state.diseno.price > 0) items.push({ desc: state.diseno.label, cat: 'Diseño', price: state.diseno.price });
-        const pageExtra = getPagePrice(state.pages);
-        if (pageExtra > 0) items.push({ desc: `${state.pages} páginas configuradas`, cat: 'Páginas', price: pageExtra });
-        state.funciones.forEach(f => items.push({ desc: f.label, cat: 'Funcionalidad', price: f.price }));
-        if (state.tiempo && state.tiempo.price !== 0) items.push({ desc: state.tiempo.label, cat: 'Tiempo de entrega', price: state.tiempo.price });
-
-        // jsPDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        const W = 210, H = 297;
-
-        // ── BACKGROUND
-        doc.setFillColor(8, 8, 8);
-        doc.rect(0, 0, W, H, 'F');
-
-        // ── GOLD SIDEBAR
-        doc.setFillColor(201, 168, 76);
-        doc.rect(0, 0, 6, H, 'F');
-
-        // ── HEADER BLOCK
-        doc.setFillColor(17, 17, 17);
-        doc.rect(6, 0, W - 6, 52, 'F');
-
-        // Header gold line bottom
-        doc.setDrawColor(201, 168, 76);
-        doc.setLineWidth(0.3);
-        doc.line(6, 52, W, 52);
-
-        // Logo text (Ignite)
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(26);
-        doc.setTextColor(247, 243, 238);
-        doc.text('IGNITE', 16, 22);
-
-        // Tagline
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(107, 101, 96);
-        doc.text('DESARROLLO WEB PREMIUM', 16, 28);
-
-        // Folio badge
-        doc.setFillColor(201, 168, 76);
-        doc.roundedRect(W - 50, 10, 44, 12, 1, 1, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor(8, 8, 8);
-        doc.text('COTIZACIÓN ' + folio, W - 48, 18);
-
-        // Fecha
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(107, 101, 96);
-        doc.text('Emitida: ' + fecha, W - 50, 27);
-
-        // ── TÍTULO COTIZACIÓN
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(18);
-        doc.setTextColor(247, 243, 238);
-        doc.text('PROPUESTA DE DESARROLLO', 16, 42);
-        doc.setTextColor(201, 168, 76);
-        doc.text('WEB', 16 + doc.getTextWidth('PROPUESTA DE DESARROLLO '), 42);
-
-        // ── CLIENT BOX
-        doc.setFillColor(26, 26, 26);
-        doc.rect(6, 58, (W - 12) * 0.55, 32, 'F');
-        doc.setDrawColor(201, 168, 76, 0.3);
-        doc.setLineWidth(0.2);
-        doc.rect(6, 58, (W - 12) * 0.55, 32);
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(201, 168, 76);
-        doc.text('PREPARADO PARA', 12, 65);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(13);
-        doc.setTextColor(247, 243, 238);
-        doc.text(nombre, 12, 73);
-        if (empresa) {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor(176, 176, 160);
-            doc.text(empresa, 12, 80);
-        }
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(107, 101, 96);
-        doc.text(email, 12, empresa ? 87 : 80);
-
-        // ── TOTAL BOX
-        const tbX = 6 + (W - 12) * 0.58;
-        const tbW = (W - 12) * 0.42;
-        doc.setFillColor(201, 168, 76);
-        doc.rect(tbX, 58, tbW, 32, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(30, 20, 0);
-        doc.text('TOTAL ESTIMADO', tbX + 6, 65);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(22);
-        doc.setTextColor(8, 8, 8);
-        doc.text(formatMoney(total), tbX + 6, 76);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(80, 60, 0);
-        doc.text('USD · IVA no incluido', tbX + 6, 83);
-        doc.text('Válida por 15 días', tbX + 6, 88);
-
-        // ── TABLE HEADER
-        let y = 100;
-        doc.setFillColor(17, 17, 17);
-        doc.rect(6, y, W - 12, 9, 'F');
-        doc.setDrawColor(201, 168, 76);
-        doc.setLineWidth(0.4);
-        doc.line(6, y, W - 6, y);
-        doc.line(6, y + 9, W - 6, y + 9);
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7.5);
-        doc.setTextColor(201, 168, 76);
-        doc.text('DESCRIPCIÓN', 12, y + 6);
-        doc.text('CATEGORÍA', 100, y + 6);
-        doc.text('VALOR (USD)', W - 12, y + 6, { align: 'right' });
-        y += 9;
-
-        // ── TABLE ROWS
-        items.forEach((item, i) => {
-            const rowH = 9;
-            if (i % 2 === 0) {
-                doc.setFillColor(20, 20, 20);
-            } else {
-                doc.setFillColor(26, 26, 26);
-            }
-            doc.rect(6, y, W - 12, rowH, 'F');
-            doc.setDrawColor(40, 40, 40);
-            doc.setLineWidth(0.1);
-            doc.line(6, y + rowH, W - 6, y + rowH);
-
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8.5);
-            doc.setTextColor(247, 243, 238);
-            doc.text(item.desc, 12, y + 6.2);
-
-            doc.setFontSize(7.5);
-            doc.setTextColor(107, 101, 96);
-            doc.text(item.cat, 100, y + 6.2);
-
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(8.5);
-            doc.setTextColor(201, 168, 76);
-            doc.text(formatMoney(item.price), W - 12, y + 6.2, { align: 'right' });
-            y += rowH;
-        });
-
-        // ── TOTAL ROW
-        y += 2;
-        doc.setFillColor(201, 168, 76);
-        doc.rect(6, y, W - 12, 11, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(8, 8, 8);
-        doc.text('TOTAL ESTIMADO', 12, y + 7.5);
-        doc.text(formatMoney(total) + ' USD', W - 12, y + 7.5, { align: 'right' });
-        y += 18;
-
-        // ── NOTAS / CONDICIONES
-        doc.setFillColor(17, 17, 17);
-        doc.rect(6, y, W - 12, 52, 'F');
-        doc.setDrawColor(201, 168, 76);
-        doc.setLineWidth(0.2);
-        doc.rect(6, y, W - 12, 52);
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor(201, 168, 76);
-        doc.text('CONDICIONES Y PRÓXIMOS PASOS', 12, y + 8);
-
-        const condiciones = [
-            '→  Esta cotización es orientativa y sujeta a confirmación tras la consultoría inicial gratuita.',
-            '→  El precio final puede variar según el alcance detallado del proyecto.',
-            '→  Forma de pago: 50% al inicio del proyecto, 50% al entregar el resultado final.',
-            '→  Incluye 30 días de soporte técnico gratuito post-lanzamiento.',
-            '→  Cotización válida por 15 días calendario desde la fecha de emisión.',
-        ];
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(176, 172, 166);
-        condiciones.forEach((line, i) => {
-            doc.text(line, 12, y + 16 + (i * 7));
-        });
-
-        // NEXT STEP
-        y += 56;
-        doc.setFillColor(26, 26, 26);
-        doc.rect(6, y, W - 12, 22, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(247, 243, 238);
-        doc.text('¿Listo para empezar? Agenda tu consultoría gratuita de 30 minutos:', 12, y + 9);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(201, 168, 76);
-        doc.text('dilancoronado358@gmail.com  ·  +593 96 993 0639  ·  calendly.com/dilancoronado358', 12, y + 17);
-
-        // ── FOOTER
-        doc.setFillColor(17, 17, 17);
-        doc.rect(6, H - 16, W - 6, 16, 'F');
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(107, 101, 96);
-        doc.text('Ignite · Desarrollo Web Premium · Todos los derechos reservados · ' + new Date().getFullYear(), W / 2, H - 7, { align: 'center' });
-        doc.setTextColor(201, 168, 76);
-        doc.text(folio, W - 12, H - 7, { align: 'right' });
-
-        const filename = `Cotizacion-Ignite-${nombre.replace(/\s+/g, '-')}-${folio}.pdf`;
-
-        // Mobile-compatible download
-        try {
-            const blob = doc.output('blob');
-            const url = URL.createObjectURL(blob);
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-            if (isIOS) {
-                const newTab = window.open(url, '_blank');
-                if (!newTab) {
-                    const dataUri = doc.output('datauristring');
-                    const a = document.createElement('a');
-                    a.href = dataUri;
-                    a.target = '_blank';
-                    a.rel = 'noopener';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
-                setTimeout(() => URL.revokeObjectURL(url), 10000);
-            } else {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(url), 5000);
-            }
-
-            // Button feedback
-            const btn = document.getElementById('btn-download');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> ¡PDF generado!';
-            btn.style.background = '#2ecc71';
-            setTimeout(() => {
-                btn.innerHTML = original;
-                btn.style.background = '';
-            }, 3000);
-
-        } catch (err) {
-            console.error('PDF error:', err);
-            const dataUri = doc.output('datauristring');
-            const a = document.createElement('a');
-            a.href = dataUri;
-            a.download = filename;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    }
-
-    // FAQ Accordion
-    document.querySelectorAll('.faq-question').forEach(q => {
-        q.addEventListener('click', () => {
-            const item = q.parentElement;
-            const isOpen = item.classList.contains('open');
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-            if (!isOpen) item.classList.add('open');
-        });
-    });
-
+  try {
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+    const fn = `Cotizacion-Ignite-${nombre.replace(/\s+/g,'-')}-${folio}.pdf`;
+    if(isIOS){const w=window.open(url,'_blank');if(!w){const a=document.createElement('a');a.href=doc.output('datauristring');a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);}setTimeout(()=>URL.revokeObjectURL(url),10000);}
+    else{const a=document.createElement('a');a.href=url;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(url),5000);}
+    const btn = document.getElementById('btn-download');
+    const orig = btn.innerHTML;
+    btn.innerHTML='<i class="fas fa-check"></i> ¡PDF generado!';
+    btn.style.background='#1a1a1a';
+    setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';},3000);
+  } catch(err) {
+    const a=document.createElement('a');a.href=doc.output('datauristring');a.download=`Cotizacion-Ignite-${folio}.pdf`;a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }
+});
 </script>
-
 </body>
 </html>
