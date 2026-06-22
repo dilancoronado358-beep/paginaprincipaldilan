@@ -224,6 +224,8 @@ h1, h2, h3, h4, .logo {
     grid-column: span 2;
     display: flex;
     flex-direction: column;
+    background: transparent;
+    border: none;
 }
 
 @media (max-width: 768px) {
@@ -234,35 +236,15 @@ h1, h2, h3, h4, .logo {
 
 .large-item img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
-    object-position: center;
-    border-bottom: 1px solid var(--card-border);
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
     transition: transform 0.5s ease;
+    background: transparent;
 }
 
 .large-item:hover img {
-    transform: scale(1.05);
-}
-
-.bento-content {
-    padding: 1.5rem;
-    text-align: left;
-    background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.95) 100%);
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
-.bento-content h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.bento-content p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
+    transform: scale(1.02);
 }
 
 .small-item {
