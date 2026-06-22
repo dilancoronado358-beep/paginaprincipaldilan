@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva tu demostración - Qualifi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .calendly-container {
+            padding: 8rem 5% 5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            min-height: 100vh;
+        }
+        .calendly-container h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .calendly-container h1 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .calendly-container p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+        .calendly-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            padding: 10px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo"><img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1774892824/14_nq6e5h.png" alt="Qualifi Logo" class="logo-img"></a>
+        <div class="nav-links">
+            <a href="index.html#features">Características</a>
+            <a href="index.html#platform">Plataforma</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="https://crm.qualifi.ec/" target="_blank" class="btn btn-secondary">Ingresar al CRM</a>
+            <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+        </div>
+    </nav>
+
+    <main class="calendly-container animate-up">
+        <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1774892824/14_nq6e5h.png" alt="Qualifi Logo" style="max-height: 60px; margin-bottom: 2rem;">
+        <h1>Agenda tu llamada con <span>Qualifi</span></h1>
+        <p>Elige el horario que mejor se adapte a ti para descubrir cómo podemos escalar tus ventas.</p>
+        
+        <div class="calendly-card">
+            <!-- Principio del widget integrado de Calendly -->
+            <div class="calendly-inline-widget" data-url="https://calendly.com/dcoronado-qualifi/30min?hide_event_type_details=1&primary_color=572f7b" style="min-width:320px;height:700px;"></div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+            <!-- Final del widget integrado de Calendly -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="https://res.cloudinary.com/dtmqftcsr/image/upload/v1774892824/14_nq6e5h.png" alt="Qualifi Logo" class="logo-img" style="filter: grayscale(1) brightness(2);">
+                <p>Innovando en la conversión de leads y ventas.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacidad</a>
+                <a href="#">Términos de servicio</a>
+                <a href="#">Soporte</a>
+            </div>
+        </div>
+        <p class="copyright">© 2026 Qualifi. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
