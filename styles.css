@@ -1,10 +1,10 @@
 :root {
-    --bg-dark: #0a0a0f;
-    --text-main: #f0f0f5;
-    --text-muted: #9ba1a6;
-    --accent: #6b46c1;
-    --accent-hover: #805ad5;
-    --accent-gradient: linear-gradient(135deg, #6b46c1 0%, #3182ce 100%);
+    --bg-dark: #111111;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+    --accent: #00DDDA;
+    --accent-hover: #00c4c2;
+    --accent-gradient: linear-gradient(135deg, #00DDDA 0%, #008f8e 100%);
     --card-bg: rgba(255, 255, 255, 0.03);
     --card-border: rgba(255, 255, 255, 0.08);
 }
@@ -37,7 +37,7 @@ h1, h2, h3, h4, .logo {
     width: 100%;
     top: 0;
     z-index: 100;
-    background: rgba(10, 10, 15, 0.8);
+    background: rgba(17, 17, 17, 0.8);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--card-border);
 }
@@ -85,12 +85,12 @@ h1, h2, h3, h4, .logo {
     background: var(--accent-gradient);
     color: white;
     border: none;
-    box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 221, 218, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(107, 70, 193, 0.5);
+    box-shadow: 0 6px 20px rgba(0, 221, 218, 0.5);
 }
 
 .btn-secondary {
@@ -127,7 +127,7 @@ h1, h2, h3, h4, .logo {
     right: -10%;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(107, 70, 193, 0.2) 0%, rgba(10, 10, 15, 0) 70%);
+    background: radial-gradient(circle, rgba(0, 221, 218, 0.2) 0%, rgba(17, 17, 17, 0) 70%);
     border-radius: 50%;
     z-index: -1;
 }
@@ -174,7 +174,7 @@ h1, h2, h3, h4, .logo {
     max-width: 650px;
     height: auto;
     border-radius: 12px;
-    box-shadow: 0 25px 50px -12px rgba(107, 70, 193, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 221, 218, 0.4);
     border: 1px solid var(--card-border);
     transform: rotateY(-5deg) rotateX(2deg);
     transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -182,7 +182,7 @@ h1, h2, h3, h4, .logo {
 
 .main-hero-img:hover {
     transform: rotateY(0deg) rotateX(0deg);
-    box-shadow: 0 30px 60px -10px rgba(107, 70, 193, 0.6);
+    box-shadow: 0 30px 60px -10px rgba(0, 221, 218, 0.6);
 }
 
 /* Interactive Bento Grid Features */
@@ -193,7 +193,15 @@ h1, h2, h3, h4, .logo {
 
 .section-title {
     font-size: 2.5rem;
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
+}
+
+.features-description {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto 4rem auto;
+    line-height: 1.8;
 }
 
 .bento-grid {
@@ -216,7 +224,7 @@ h1, h2, h3, h4, .logo {
 
 .bento-item:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(107, 70, 193, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 221, 218, 0.3);
     border-color: var(--accent);
 }
 
@@ -251,7 +259,7 @@ h1, h2, h3, h4, .logo {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 3rem;
+    gap: 2rem;
     max-width: 1200px;
     margin: 4rem auto 0;
 }
@@ -260,27 +268,27 @@ h1, h2, h3, h4, .logo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     cursor: pointer;
-    width: 180px;
+    width: 120px;
 }
 
 .small-item img {
-    width: 120px;
-    height: 120px;
+    width: 70px;
+    height: 70px;
     object-fit: contain;
-    border-radius: 24px;
+    border-radius: 16px;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
 .small-item:hover img {
-    transform: translateY(-10px) scale(1.1);
-    box-shadow: 0 20px 40px rgba(107, 70, 193, 0.6);
+    transform: translateY(-8px) scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 221, 218, 0.6);
 }
 
 .small-item h4 {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     color: var(--text-main);
     text-align: center;
@@ -294,7 +302,7 @@ h1, h2, h3, h4, .logo {
 .cta-container {
     text-align: center;
     padding: 5rem 2rem;
-    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(107, 70, 193, 0.1) 100%);
+    background: linear-gradient(180deg, var(--card-bg) 0%, rgba(0, 221, 218, 0.1) 100%);
 }
 
 .cta-container h2 {
@@ -312,7 +320,7 @@ h1, h2, h3, h4, .logo {
 }
 
 .glow {
-    box-shadow: 0 0 30px rgba(107, 70, 193, 0.6);
+    box-shadow: 0 0 30px rgba(0, 221, 218, 0.6);
 }
 
 /* Footer */
