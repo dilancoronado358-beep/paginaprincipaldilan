@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
         acceptBtn.addEventListener('click', () => {
             localStorage.setItem('cookiesAccepted', 'true');
             cookieBanner.classList.remove('visible');
+            cookieBanner.addEventListener('transitionend', () => {
+                cookieBanner.style.display = 'none';
+            }, { once: true });
         });
     }
 
